@@ -140,11 +140,13 @@ function initShowreelAutoplay() {
 
   async function playShowreel() {
     video.volume = 1;
-    video.muted = false;
+    video.muted = true;
     try {
       await video.play();
+      video.muted = false;
       needsUnlock = false;
     } catch {
+      video.muted = false;
       needsUnlock = true;
     }
   }
