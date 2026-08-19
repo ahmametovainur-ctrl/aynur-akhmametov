@@ -122,14 +122,10 @@ else:
     fail("Missing #modal-folder in modal")
 
 print("\n=== Scroll snap ===")
-if "scroll-snap-type: y mandatory" in html:
-    fail("scroll-snap mandatory still enabled (blocks footer scroll)")
+if re.search(r"scroll-snap", html):
+    fail("scroll-snap still present in HTML (causes footer bounce)")
 else:
-    ok("no mandatory scroll-snap")
-if "section:not(.hero):not(.showreel-section)" in html and "scroll-snap-align" in html.split("section:not")[1][:200]:
-    fail("scroll-snap-align on all sections")
-else:
-    ok("snap limited to hero/showreel")
+    ok("scroll-snap fully disabled")
 
 print("\n=== Live site checks ===")
 for path in ["", "/js/main.js", "/icons/figma.svg", "/icons/qr-telegram.png", "/videos/showreel.mp4", "/icons/favicon.svg"]:

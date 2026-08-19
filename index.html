@@ -27,17 +27,8 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html {
-      scroll-behavior: smooth;
-    }
-
-    /* Snap только hero + showreel; иначе футер не прокручивается */
-    @media (min-width: 768px) {
-      html { scroll-snap-type: y proximity; }
-      .hero,
-      .showreel-section {
-        scroll-snap-align: start;
-        scroll-snap-stop: normal;
-      }
+      scroll-behavior: auto;
+      overflow-y: scroll;
     }
 
     body {
@@ -133,8 +124,7 @@
 
     /* ── HERO ── */
     .hero {
-      min-height: 100vh;
-      height: 100vh;
+      min-height: 100svh;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -364,14 +354,14 @@
 
     /* ── SHOWREEL (scroll section 2) ── */
     .showreel-section {
-      min-height: 100vh;
-      height: 100vh;
+      min-height: 100svh;
       position: relative;
       background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      overflow-anchor: none;
     }
 
     .showreel-section video {
@@ -454,7 +444,10 @@
     }
 
     footer {
-      padding-bottom: 4rem;
+      padding: 5rem 0 calc(4rem + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid var(--line);
+      position: relative;
+      scroll-margin-bottom: 2rem;
     }
 
     .section-title {
@@ -740,11 +733,6 @@
     }
 
     /* ── FOOTER ── */
-    footer {
-      padding: 5rem 0 3rem;
-      border-top: 1px solid var(--line);
-      position: relative;
-    }
 
     .footer-grid {
       display: grid;
