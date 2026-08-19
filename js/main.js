@@ -139,11 +139,17 @@ function initShowreelAutoplay() {
   let needsUnlock = false;
 
   async function playShowreel() {
+    if (!video.paused && !video.muted && video.volume > 0) return;
+
     video.volume = 1;
     video.muted = true;
+
     try {
       await video.play();
-      video.muted = false;
+      requestAnimationFrame(() => {
+        video.muted = false;
+        video.volume = 1;
+      });
       needsUnlock = false;
     } catch {
       video.muted = false;
@@ -167,10 +173,6 @@ function initShowreelAutoplay() {
     link.addEventListener('click', () => {
       setTimeout(playShowreel, 600);
     });
-  });
-
-  section.addEventListener('click', () => {
-    playShowreel();
   });
 
   const observer = new IntersectionObserver(
