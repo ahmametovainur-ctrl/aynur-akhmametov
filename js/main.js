@@ -135,63 +135,119 @@ function initShowreelAutoplay() {
   const video = document.getElementById('showreel-video');
   if (!section || !video) return;
 
-  let wasVisible = false;
-  let needsUnlock = false;
+  let wasInView = false;
+  let userInteracted = false;
+  let playPending = false;
 
-  async function playShowreel() {
-    if (!video.paused && !video.muted && video.volume > 0) return;
+  function isSectionVisible() {
+    const rect = section.getBoundingClientRect();
+    const vh = window.innerHeight;
+    return rect.top < vh * 0.9 && rect.bottom > vh * 0.1;
+  }
 
+  function waitForVideoReady() {
+    if (video.readyState >= 2) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const done = () => {
+        video.removeEventListener('loadeddata', done);
+        video.removeEventListener('canplay', done);
+        video.removeEventListener('error', fail);
+        resolve();
+      };
+      const fail = () => {
+        video.removeEventListener('loadeddata', done);
+        video.removeEventListener('canplay', done);
+        video.removeEventListener('error', fail);
+        reject(new Error('showreel load failed'));
+      };
+      video.addEventListener('loadeddata', done);
+      video.addEventListener('canplay', done);
+      video.addEventListener('error', fail);
+    });
+  }
+
+  async function playShowreel(resetTime = false) {
+    if (playPending) return;
+    if (!video.paused && !video.muted) return;
+
+    playPending = true;
+
+    if (resetTime) video.currentTime = 0;
     video.volume = 1;
-    video.muted = true;
+
+    const unmute = () => {
+      video.muted = false;
+      video.volume = 1;
+    };
 
     try {
+      await waitForVideoReady();
+      video.muted = true;
+      video.addEventListener('playing', unmute, { once: true });
       await video.play();
-      requestAnimationFrame(() => {
-        video.muted = false;
-        video.volume = 1;
-      });
-      needsUnlock = false;
     } catch {
-      video.muted = false;
-      needsUnlock = true;
+      video.removeEventListener('playing', unmute);
+      unmute();
+      if (userInteracted) {
+        try {
+          await video.play();
+        } catch {
+          /* browser blocked autoplay */
+        }
+      }
+    } finally {
+      playPending = false;
     }
   }
 
-  function tryPlayIfVisible() {
-    const rect = section.getBoundingClientRect();
-    const visible = rect.top < window.innerHeight * 0.75 && rect.bottom > window.innerHeight * 0.25;
-    if (visible) playShowreel();
+  function handleVisibility(visible) {
+    if (visible) {
+      playShowreel(!wasInView);
+      wasInView = true;
+    } else {
+      video.pause();
+      wasInView = false;
+    }
   }
 
-  ['click', 'touchstart', 'keydown', 'scroll'].forEach((eventName) => {
-    document.addEventListener(eventName, () => {
-      if (needsUnlock) tryPlayIfVisible();
-    }, { passive: true });
-  });
+  function unlockFromGesture() {
+    userInteracted = true;
+    if (isSectionVisible() && video.paused) playShowreel(false);
+  }
+
+  document.addEventListener('pointerdown', unlockFromGesture, { passive: true });
+  document.addEventListener('keydown', unlockFromGesture, { passive: true });
 
   document.querySelectorAll('a[href="#showreel"]').forEach((link) => {
     link.addEventListener('click', () => {
-      setTimeout(playShowreel, 600);
+      userInteracted = true;
+      setTimeout(() => playShowreel(true), 500);
     });
   });
 
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (!wasVisible) video.currentTime = 0;
-          wasVisible = true;
-          playShowreel();
-        } else {
-          video.pause();
-          wasVisible = false;
-        }
-      });
+      entries.forEach((entry) => handleVisibility(entry.isIntersecting));
     },
-    { threshold: 0.45 }
+    { threshold: [0, 0.2, 0.4, 0.6] }
   );
 
   observer.observe(section);
+
+  let scrollTick = false;
+  window.addEventListener('scroll', () => {
+    if (scrollTick) return;
+    scrollTick = true;
+    requestAnimationFrame(() => {
+      scrollTick = false;
+      if (isSectionVisible()) {
+        if (video.paused) playShowreel(false);
+      } else if (!video.paused) {
+        video.pause();
+        wasInView = false;
+      }
+    });
+  }, { passive: true });
 }
 
 function initCopyButtons() {
