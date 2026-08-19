@@ -30,8 +30,14 @@
       scroll-behavior: smooth;
     }
 
+    /* Snap только hero + showreel; иначе футер не прокручивается */
     @media (min-width: 768px) {
-      html { scroll-snap-type: y mandatory; }
+      html { scroll-snap-type: y proximity; }
+      .hero,
+      .showreel-section {
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+      }
     }
 
     body {
@@ -129,7 +135,6 @@
     .hero {
       min-height: 100vh;
       height: 100vh;
-      scroll-snap-align: start;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -361,7 +366,6 @@
     .showreel-section {
       min-height: 100vh;
       height: 100vh;
-      scroll-snap-align: start;
       position: relative;
       background: #000;
       display: flex;
@@ -449,8 +453,8 @@
       border-top: 1px solid var(--line);
     }
 
-    section:not(.hero):not(.showreel-section) {
-      scroll-snap-align: start;
+    footer {
+      padding-bottom: 4rem;
     }
 
     .section-title {
@@ -924,7 +928,14 @@
     .case-modal-desc {
       font-size: 0.9rem;
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .case-modal-folder {
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
     }
 
     .case-modal-action {
@@ -1327,7 +1338,8 @@
       <p class="case-modal-cat" id="modal-cat"></p>
       <h3 class="case-modal-title" id="modal-title"></h3>
       <p class="case-modal-desc" id="modal-desc"></p>
-      <a class="case-modal-action" id="modal-action" href="#" data-i18n="modal.open">Смотреть кейс</a>
+      <p class="case-modal-folder" id="modal-folder" hidden></p>
+      <a class="case-modal-action" id="modal-action" href="#" data-i18n="modal.open">Открыть папку</a>
     </div>
   </div>
 

@@ -1,8 +1,14 @@
 const SITE = {
-  yandexPortfolio: 'https://disk.yandex.ru/d/Em9lTJpf1cYpPQ',
+  yandexBase: 'https://disk.yandex.ru/d/Em9lTJpf1cYpPQ',
   envato: 'https://elements.envato.com/user/JustaMotion',
   telegram: 'https://t.me/tandyy9'
 };
+
+/** Ссылка на конкретную папку в общем Yandex Disk */
+function yandexFolderUrl(folderName) {
+  const path = encodeURIComponent(`/${folderName}`);
+  return `${SITE.yandexBase}?dialog=slider&path=${path}`;
+}
 
 const i18n = {
   ru: {
@@ -54,8 +60,9 @@ const i18n = {
     'footer.showreelBackup': 'Showreel (Yandex Disk) ↗',
     'footer.tagline': 'СОЗДАЮ ДВИЖЕНИЕ.<br>РАССКАЗЫВАЮ ИСТОРИИ.',
     'modal.close': 'Закрыть',
-    'modal.open': 'Смотреть кейс',
-    'modal.openEnvato': 'Открыть на Envato'
+    'modal.open': 'Открыть папку',
+    'modal.openEnvato': 'Открыть на Envato',
+    'modal.folder': 'Папка'
   },
   en: {
     'topbar.left': 'MOTION PORTFOLIO',
@@ -106,17 +113,18 @@ const i18n = {
     'footer.showreelBackup': 'Showreel (Yandex Disk) ↗',
     'footer.tagline': 'CRAFTING MOTION.<br>BUILDING STORIES.',
     'modal.close': 'Close',
-    'modal.open': 'View case',
-    'modal.openEnvato': 'Open on Envato'
+    'modal.open': 'Open folder',
+    'modal.openEnvato': 'Open on Envato',
+    'modal.folder': 'Folder'
   }
 };
 
 const caseItems = [
-  { id: 'alabuga', titleKey: 'case1.title', catKey: 'case1.cat', descKey: 'case1.desc', href: SITE.yandexPortfolio },
-  { id: 'logo', titleKey: 'case2.title', catKey: 'case2.cat', descKey: 'case2.desc', href: SITE.yandexPortfolio },
-  { id: 'ads', titleKey: 'case3.title', catKey: 'case3.cat', descKey: 'case3.desc', href: SITE.yandexPortfolio },
-  { id: 'ai', titleKey: 'case4.title', catKey: 'case4.cat', descKey: 'case4.desc', href: SITE.yandexPortfolio },
-  { id: 'youtube', titleKey: 'case5.title', catKey: 'case5.cat', descKey: 'case5.desc', href: SITE.yandexPortfolio },
+  { id: 'alabuga', titleKey: 'case1.title', catKey: 'case1.cat', descKey: 'case1.desc', folder: 'SAAS Анимация', href: yandexFolderUrl('SAAS Анимация') },
+  { id: 'logo', titleKey: 'case2.title', catKey: 'case2.cat', descKey: 'case2.desc', folder: 'Анимация логотипа', href: yandexFolderUrl('Анимация логотипа') },
+  { id: 'ads', titleKey: 'case3.title', catKey: 'case3.cat', descKey: 'case3.desc', folder: 'Креативы', href: yandexFolderUrl('Креативы') },
+  { id: 'ai', titleKey: 'case4.title', catKey: 'case4.cat', descKey: 'case4.desc', folder: 'AI', href: yandexFolderUrl('AI') },
+  { id: 'youtube', titleKey: 'case5.title', catKey: 'case5.cat', descKey: 'case5.desc', folder: 'Ролик на ютуб про города России', href: yandexFolderUrl('Ролик на ютуб про города России') },
   { id: 'envato', titleKey: 'case6.title', catKey: 'case6.cat', descKey: 'case6.desc', href: SITE.envato, envato: true }
 ];
 
@@ -229,6 +237,15 @@ function openCaseModal(caseId) {
   document.getElementById('modal-title').textContent = t(item.titleKey);
   document.getElementById('modal-cat').textContent = t(item.catKey);
   document.getElementById('modal-desc').textContent = t(item.descKey);
+  const folderEl = document.getElementById('modal-folder');
+  if (folderEl) {
+    if (item.folder) {
+      folderEl.hidden = false;
+      folderEl.textContent = `${t('modal.folder')}: ${item.folder}`;
+    } else {
+      folderEl.hidden = true;
+    }
+  }
   const btn = document.getElementById('modal-action');
   btn.textContent = item.envato ? t('modal.openEnvato') : t('modal.open');
   btn.href = item.href;

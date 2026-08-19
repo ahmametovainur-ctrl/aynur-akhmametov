@@ -1,46 +1,40 @@
 {
+  "yandexBase": "https://disk.yandex.ru/d/Em9lTJpf1cYpPQ",
   "cases": [
     {
       "id": "alabuga",
-      "video": "../Портфолио/SAAS Анимация/Final_Final.mp4",
-      "tags": ["2D/3D", "Rebranding"],
-      "category": { "ru": "SaaS Presentation", "en": "SaaS Presentation" },
-      "title": { "ru": "Ребрендинг Алабуги", "en": "Alabuga Rebranding" }
+      "yandexFolder": "SAAS Анимация",
+      "featuredFile": "Final_Final.mp4",
+      "tags": ["2D/3D", "Rebranding"]
     },
     {
       "id": "logo",
-      "video": "../Портфолио/Анимация логотипа/1 вар.mp4",
-      "tags": ["Logo", "Brand"],
-      "category": { "ru": "9 вариантов", "en": "9 Variants" },
-      "title": { "ru": "Анимация логотипа", "en": "Logo Animation" }
+      "yandexFolder": "Анимация логотипа",
+      "featuredFile": "1 вар.mp4",
+      "tags": ["Logo", "Brand"]
     },
     {
       "id": "creatives",
-      "video": "../Портфолио/Креативы/Creative 01 1080х1920.mp4",
-      "tags": ["Reels", "9:16"],
-      "category": { "ru": "Performance Ads", "en": "Performance Ads" },
-      "title": { "ru": "Рекламные креативы", "en": "Ad Creatives" }
+      "yandexFolder": "Креативы",
+      "featuredFile": "Creative 01 1080х1920.mp4",
+      "tags": ["Reels", "9:16"]
     },
     {
       "id": "ai",
-      "video": "../Портфолио/AI/Мультреклама.mp4",
-      "tags": ["AI", "Pipeline"],
-      "category": { "ru": "ComfyUI + Kling", "en": "ComfyUI + Kling" },
-      "title": { "ru": "AI-продакшн", "en": "AI Production" }
+      "yandexFolder": "AI",
+      "featuredFile": "Мультреклама.mp4",
+      "tags": ["AI", "Pipeline"]
     },
     {
       "id": "youtube",
-      "video": "../Портфолио/Ролик на ютуб про города России/1 часть ролика - Англ.mp4",
-      "tags": ["Localization"],
-      "category": { "ru": "EN / ES / FR", "en": "EN / ES / FR" },
-      "title": { "ru": "Локализация YouTube", "en": "YouTube Localization" }
+      "yandexFolder": "Ролик на ютуб про города России",
+      "featuredFile": "1 часть ролика - Англ.mp4",
+      "tags": ["Localization"]
     },
     {
       "id": "envato",
       "external": "https://elements.envato.com/user/JustaMotion",
-      "tags": ["155+ Products", "1070+ Sales"],
-      "category": { "ru": "Envato Marketplace", "en": "Envato Marketplace" },
-      "title": { "ru": "JustaMotion", "en": "JustaMotion" }
+      "tags": ["155+ Products", "1070+ Sales"]
     }
   ],
   "links": {
