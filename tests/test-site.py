@@ -59,6 +59,8 @@ print("=== Local file checks ===")
 check_file(ROOT / "index.html")
 check_file(ROOT / "js/main.js")
 check_file(ROOT / "videos/showreel.mp4")
+check_file(ROOT / "images/work-portfolio-cover.jpg")
+check_file(ROOT / "images/work-envato-cover.jpg")
 for icon in [
     "adobeaftereffects.svg", "adobepremierepro.svg", "adobephotoshop.svg",
     "adobeillustrator.svg", "figma.svg", "cinema4d.svg", "comfyui.svg",

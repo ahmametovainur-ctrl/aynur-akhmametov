@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- portfolio build 20260827 -->
+<!-- portfolio build 20260828 -->
 <html lang="ru">
 <head>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -369,8 +369,9 @@
     }
 
     .showreel-section video {
+      flex: 1;
       width: 100%;
-      height: 100%;
+      max-height: 100%;
       object-fit: contain;
       background: #000;
     }
@@ -557,11 +558,20 @@
 
     .work-link-thumb {
       aspect-ratio: 16/10;
-      background: linear-gradient(135deg, #0d1a2e 0%, #1a0a12 100%);
+      overflow: hidden;
+      background: #0a0a0a;
     }
 
-    .work-link-thumb.envato {
-      background: linear-gradient(135deg, #1a1810 0%, #201008 100%);
+    .work-link-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .work-link:hover .work-link-thumb img {
+      transform: scale(1.03);
     }
 
     .work-link-body {
@@ -1169,7 +1179,9 @@
             target="_blank"
             rel="noopener"
           >
-            <div class="work-link-thumb" aria-hidden="true"></div>
+            <div class="work-link-thumb">
+              <img src="images/work-portfolio-cover.jpg" alt="" loading="lazy" width="960" height="600" />
+            </div>
             <div class="work-link-body">
               <h4 data-i18n="work.yandex.title">Портфолио</h4>
               <ul class="work-link-list">
@@ -1190,7 +1202,9 @@
             target="_blank"
             rel="noopener"
           >
-            <div class="work-link-thumb envato" aria-hidden="true"></div>
+            <div class="work-link-thumb">
+              <img src="images/work-envato-cover.jpg" alt="" loading="lazy" width="960" height="600" />
+            </div>
             <div class="work-link-body">
               <h4 data-i18n="work.envato.title">JustaMotion</h4>
               <p class="work-link-desc" data-i18n="work.envato.desc">155+ коммерческих шаблонов и элементов для Reels, TikTok и вертикальных форматов.</p>
@@ -1315,6 +1329,6 @@
     <p class="copyright">© 2026 Aynur Akhmametov</p>
   </footer>
 
-  <script src="js/main.js?v=20260826"></script>
+  <script src="js/main.js?v=20260827"></script>
 </body>
 </html>
