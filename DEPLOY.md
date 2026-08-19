@@ -1,5 +1,14 @@
 # Деплой портфолио
 
+## Live
+
+- **Сайт:** https://ozik14.github.io/aynur-akhmametov/
+- **Репозиторий:** https://github.com/Ozik14/aynur-akhmametov
+
+GitHub Pages включён (branch `main`, root).
+
+---
+
 ## Вариант A — GitHub Pages (бесплатно, сервер не нужен)
 
 Подходит для вашего сайта: HTML + JS + видео 58 MB.
