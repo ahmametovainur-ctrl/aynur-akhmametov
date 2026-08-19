@@ -4,9 +4,6 @@ const SITE = {
   telegram: 'https://t.me/tandyy9'
 };
 
-/** Общая папка портфолио на Yandex Disk */
-const YANDEX_PORTFOLIO = SITE.yandexBase;
-
 const i18n = {
   ru: {
     'topbar.left': 'MOTION PORTFOLIO',
@@ -36,19 +33,10 @@ const i18n = {
     'proc3.title': 'ДИЗАЙН', 'proc3.desc': 'Моушн-графика, типографика, композитинг',
     'proc4.title': 'ПРОИЗВОДСТВО', 'proc4.desc': 'AE/Premiere, AI pipeline, правки',
     'proc5.title': 'СДАЧА', 'proc5.desc': 'Финальный экспорт, локализация, все форматы',
-    'work.more': 'Ещё проекты →',
-    'case1.title': 'Ребрендинг Алабуги', 'case1.cat': 'SaaS-презентация',
-    'case2.title': 'Анимация логотипа', 'case2.cat': '9 вариантов',
-    'case3.title': 'Рекламные креативы', 'case3.cat': 'Performance Ads',
-    'case4.title': 'AI-продакшн', 'case4.cat': 'ComfyUI + Kling',
-    'case5.title': 'Локализация YouTube', 'case5.cat': 'EN / ES / FR',
-    'case6.title': 'JustaMotion', 'case6.cat': 'Envato Marketplace',
-    'case1.desc': 'SaaS-презентация ребрендинга Алабуги: 2D/3D, моушн-раздел брендбука, 9+ вариантов анимации логотипа.',
-    'case2.desc': '9 вариантов анимации логотипа для брендбука и видеоконтента.',
-    'case3.desc': 'Performance-креативы для Reels, Shorts, TikTok — адаптация под 9:16, 1:1, 16:9, 4:5.',
-    'case4.desc': 'AI-ролики на пайплайне ComfyUI, Kling, ElevenLabs и n8n.',
-    'case5.desc': 'Полный цикл локализации YouTube-ролика на английский, испанский и французский.',
-    'case6.desc': '155+ коммерческих продуктов на Envato, 1070+ продаж. TikTok Elements, вертикальные форматы.',
+    'work.yandex.title': 'Портфолио',
+    'work.yandex.sub': 'Yandex Disk ↗',
+    'work.envato.title': 'JustaMotion',
+    'work.envato.sub': 'Envato ↗',
     'about.bio': 'Моушн-дизайнер с 8 годами коммерческого опыта: реклама, брендинг, корпоративное видео и AI-продакшн. Руководил видеоотделом в Алабуге — увеличил выпуск с 15 до 24 роликов в месяц. На Envato — 155+ продуктов и 1070+ продаж. Работаю из Казани, открыт к удалённым проектам.',
     'about.q1': 'Проект под ключ — от брифа до финала', 'about.q2': 'Reels, Shorts, YouTube, презентации', 'about.q3': 'AI + классический моушн в одном пайплайне', 'about.q4': '16:9, 9:16, 1:1, 4:5 и локализация',
     'about.testimonial': '«Профессиональный подход, быстрые сроки и сильный визуал»',
@@ -57,9 +45,6 @@ const i18n = {
     'footer.showreelBackup': 'Showreel (Yandex Disk) ↗',
     'footer.tagline': 'СОЗДАЮ ДВИЖЕНИЕ.<br>РАССКАЗЫВАЮ ИСТОРИИ.',
     'tg.copied': 'Скопировано!',
-    'modal.close': 'Закрыть',
-    'modal.open': 'Открыть портфолио',
-    'modal.openEnvato': 'Открыть на Envato',
   },
   en: {
     'topbar.left': 'MOTION PORTFOLIO',
@@ -89,19 +74,10 @@ const i18n = {
     'proc3.title': 'DESIGN', 'proc3.desc': 'Motion graphics, typography, compositing',
     'proc4.title': 'DEVELOP', 'proc4.desc': 'AE/Premiere, AI pipeline, revisions',
     'proc5.title': 'DELIVER', 'proc5.desc': 'Final export, localization, all formats',
-    'work.more': 'View more →',
-    'case1.title': 'Alabuga Rebranding', 'case1.cat': 'SaaS Presentation',
-    'case2.title': 'Logo Animation', 'case2.cat': '9 Variants',
-    'case3.title': 'Ad Creatives', 'case3.cat': 'Performance Ads',
-    'case4.title': 'AI Production', 'case4.cat': 'ComfyUI + Kling',
-    'case5.title': 'YouTube Localization', 'case5.cat': 'EN / ES / FR',
-    'case6.title': 'JustaMotion', 'case6.cat': 'Envato Marketplace',
-    'case1.desc': 'Alabuga rebranding SaaS presentation: 2D/3D, brandbook motion, 9+ logo animation variants.',
-    'case2.desc': '9 logo animation variants for brandbook and video content.',
-    'case3.desc': 'Performance ad creatives for Reels, Shorts, TikTok — 9:16, 1:1, 16:9, 4:5.',
-    'case4.desc': 'AI videos on ComfyUI, Kling, ElevenLabs and n8n pipeline.',
-    'case5.desc': 'Full-cycle YouTube localization into English, Spanish and French.',
-    'case6.desc': '155+ commercial products on Envato, 1070+ sales. TikTok Elements, vertical formats.',
+    'work.yandex.title': 'Portfolio',
+    'work.yandex.sub': 'Yandex Disk ↗',
+    'work.envato.title': 'JustaMotion',
+    'work.envato.sub': 'Envato ↗',
     'about.bio': 'Motion designer with 8 years of commercial experience in advertising, branding, corporate video and AI production. Led the video team at Alabuga — scaled output from 15 to 24 videos per month. 155+ products and 1070+ sales on Envato. Based in Kazan, open to remote projects.',
     'about.q1': 'End-to-end — from brief to final render', 'about.q2': 'Reels, Shorts, YouTube, presentations', 'about.q3': 'AI + classic motion in one pipeline', 'about.q4': '16:9, 9:16, 1:1, 4:5 and localization',
     'about.testimonial': '"Professional approach, fast delivery, strong visuals"',
@@ -110,20 +86,8 @@ const i18n = {
     'footer.showreelBackup': 'Showreel (Yandex Disk) ↗',
     'footer.tagline': 'CRAFTING MOTION.<br>BUILDING STORIES.',
     'tg.copied': 'Copied!',
-    'modal.close': 'Close',
-    'modal.open': 'Open portfolio',
-    'modal.openEnvato': 'Open on Envato',
   }
 };
-
-const caseItems = [
-  { id: 'alabuga', titleKey: 'case1.title', catKey: 'case1.cat', descKey: 'case1.desc', href: YANDEX_PORTFOLIO },
-  { id: 'logo', titleKey: 'case2.title', catKey: 'case2.cat', descKey: 'case2.desc', href: YANDEX_PORTFOLIO },
-  { id: 'ads', titleKey: 'case3.title', catKey: 'case3.cat', descKey: 'case3.desc', href: YANDEX_PORTFOLIO },
-  { id: 'ai', titleKey: 'case4.title', catKey: 'case4.cat', descKey: 'case4.desc', href: YANDEX_PORTFOLIO },
-  { id: 'youtube', titleKey: 'case5.title', catKey: 'case5.cat', descKey: 'case5.desc', href: YANDEX_PORTFOLIO },
-  { id: 'envato', titleKey: 'case6.title', catKey: 'case6.cat', descKey: 'case6.desc', href: SITE.envato, envato: true }
-];
 
 let lang = localStorage.getItem('portfolio-lang') || 'ru';
 
@@ -152,16 +116,6 @@ function setLang(l) {
     const val = i18n[l][key];
     if (val !== undefined) el.setAttribute('aria-label', val);
   });
-  const modal = document.getElementById('work-modal');
-  if (modal && !modal.hidden) renderWorkModalList();
-}
-
-function renderWorkModalList() {
-  const list = document.getElementById('work-modal-list');
-  if (!list) return;
-  list.innerHTML = caseItems.map((item) =>
-    `<li><strong>${t(item.titleKey)}</strong><span>${t(item.catKey)}</span></li>`
-  ).join('');
 }
 
 function initShowreelAutoplay() {
@@ -235,21 +189,6 @@ function initShowreelAutoplay() {
   observer.observe(section);
 }
 
-function openWorkModal() {
-  const modal = document.getElementById('work-modal');
-  if (!modal) return;
-  renderWorkModalList();
-  modal.hidden = false;
-  document.body.style.overflow = 'hidden';
-}
-
-function closeWorkModal() {
-  const modal = document.getElementById('work-modal');
-  if (!modal) return;
-  modal.hidden = true;
-  document.body.style.overflow = '';
-}
-
 function initCopyButtons() {
   document.querySelectorAll('[data-copy]').forEach((btn) => {
     btn.addEventListener('click', async (e) => {
@@ -290,30 +229,9 @@ function initCopyButtons() {
   });
 }
 
-function initCaseCards() {
-  document.querySelectorAll('.case-card').forEach((card) => {
-    card.addEventListener('click', openWorkModal);
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openWorkModal();
-      }
-    });
-  });
-
-  document.getElementById('work-modal-close')?.addEventListener('click', closeWorkModal);
-  document.getElementById('work-modal')?.addEventListener('click', (e) => {
-    if (e.target.id === 'work-modal') closeWorkModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeWorkModal();
-  });
-}
-
 document.getElementById('lang-ru').addEventListener('click', () => setLang('ru'));
 document.getElementById('lang-en').addEventListener('click', () => setLang('en'));
 
 setLang(lang);
 initShowreelAutoplay();
 initCopyButtons();
-initCaseCards();

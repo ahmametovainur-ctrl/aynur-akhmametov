@@ -87,7 +87,7 @@ for key in sorted(html_keys):
     else:
         fail(f"Missing i18n key in main.js: {key}")
 
-required_ids = ["showreel", "showreel-video", "work-modal", "lang-ru", "lang-en"]
+required_ids = ["showreel", "showreel-video", "work-yandex", "work-envato", "lang-ru", "lang-en"]
 print("\n=== Required DOM ids ===")
 for el_id in required_ids:
     if f'id="{el_id}"' in html or f"id='{el_id}'" in html:
@@ -95,28 +95,26 @@ for el_id in required_ids:
     else:
         fail(f"Missing id: {el_id}")
 
-print("\n=== Case cards ===")
-cases = re.findall(r'class="case-card"', html)
-if len(cases) == 6:
-    ok("6 case cards")
+print("\n=== Work links ===")
+if html.count('class="work-link"') == 2 and html.count('class="case-card"') == 0:
+    ok("2 work links (no case cards)")
 else:
-    fail(f"Expected 6 case cards, found {len(cases)}")
+    fail("expected 2 work links without case cards")
 
-if 'data-case=' not in html:
-    ok("no per-case modal triggers")
+if 'id="work-yandex"' in html and "Em9lTJpf1cYpPQ" in html:
+    ok("yandex work link")
 else:
-    fail("case cards still use data-case attributes")
+    fail("yandex work link missing")
 
-print("\n=== Work modal ===")
-if 'id="work-modal"' in html and 'openWorkModal' in js:
-    ok("single work modal")
+if 'id="work-envato"' in html and "JustaMotion" in html:
+    ok("envato work link")
 else:
-    fail("single work modal missing")
+    fail("envato work link missing")
 
-if 'id="work-modal-yandex"' in html and "Em9lTJpf1cYpPQ" in html:
-    ok("work modal yandex link")
+if 'openWorkModal' not in js:
+    ok("no work modal JS")
 else:
-    fail("work modal yandex link missing")
+    fail("work modal JS still present")
 
 if html.count('data-copy="@tandyy9"') >= 2:
     ok("telegram copy buttons")

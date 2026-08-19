@@ -529,108 +529,52 @@
       color: var(--text-muted);
     }
 
-    .work-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 1.5rem;
-    }
 
-    .work-header a {
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .work-header a:hover { text-decoration: underline; }
-
-    .cases-grid {
+    .work-links {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1.25rem;
     }
 
-    .case-card {
+    .work-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
       background: var(--card);
-      border: 1px solid rgba(139,30,45,0.12);
+      border: 1px solid rgba(139,30,45,0.2);
       overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
+      transition: border-color 0.3s, transform 0.3s;
     }
 
-    .case-card:hover {
-      transform: scale(1.02);
+    .work-link:hover {
       border-color: var(--accent);
+      transform: translateY(-2px);
     }
 
-    .case-thumb {
+    .work-link-thumb {
       aspect-ratio: 16/10;
-      background: linear-gradient(135deg, #1a1a1a, #2a1520);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: linear-gradient(135deg, #0d1a2e 0%, #1a0a12 100%);
     }
 
-    .case-thumb.alabuga { background: linear-gradient(135deg, #0d1a2e 0%, #1a0a12 100%); }
-    .case-thumb.logo { background: linear-gradient(135deg, #141414 0%, #2d1018 100%); }
-    .case-thumb.ads { background: linear-gradient(180deg, #1a1020 0%, #0a0a0a 100%); }
-    .case-thumb.ai { background: linear-gradient(135deg, #102018 0%, #1a0810 100%); }
-    .case-thumb.youtube { background: linear-gradient(135deg, #1a1010 0%, #0d1520 100%); }
-    .case-thumb.envato { background: linear-gradient(135deg, #1a1810 0%, #201008 100%); }
-
-    .play-icon {
-      width: 48px; height: 48px;
-      border: 1px solid rgba(232,224,212,0.3);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s;
+    .work-link-thumb.envato {
+      background: linear-gradient(135deg, #1a1810 0%, #201008 100%);
     }
 
-    .case-card:hover .play-icon { opacity: 1; }
-
-    .play-icon::after {
-      content: '';
-      border: 8px solid transparent;
-      border-left: 14px solid var(--text);
-      margin-left: 4px;
+    .work-link-body {
+      padding: 1.25rem 1.5rem 1.5rem;
     }
 
-    .case-info {
-      padding: 1rem 1.25rem;
-    }
-
-    .case-info h4 {
-      font-size: 0.85rem;
+    .work-link-body h4 {
+      font-size: 0.95rem;
       letter-spacing: 0.08em;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.35rem;
     }
 
-    .case-info span {
-      font-size: 0.7rem;
-      color: var(--accent);
+    .work-link-body span {
+      font-size: 0.72rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-    }
-
-    .case-tags {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .tag {
-      font-size: 0.6rem;
-      letter-spacing: 0.08em;
-      padding: 0.2rem 0.5rem;
-      border: 1px solid rgba(139,30,45,0.3);
-      color: var(--text-muted);
+      color: var(--accent);
     }
 
     .about-grid {
@@ -1019,15 +963,6 @@
       background: var(--accent);
     }
 
-    .case-card {
-      cursor: pointer;
-    }
-
-    .case-card:focus-visible {
-      outline: 1px solid var(--accent);
-      outline-offset: 2px;
-    }
-
     /* ── RESPONSIVE ── */
     @media (max-width: 1024px) {
       .services-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1037,7 +972,7 @@
 
     @media (max-width: 640px) {
       .services-grid { grid-template-columns: 1fr; }
-      .cases-grid { grid-template-columns: 1fr; }
+      .work-links { grid-template-columns: 1fr; }
       .hero-title { font-size: clamp(3rem, 22vw, 6rem); }
       .badge-text, .badge-ring { display: none; }
       .topbar-right .status { display: none; }
@@ -1218,76 +1153,34 @@
       </div>
 
       <div>
-        <div class="work-header">
-          <h2 class="section-title" style="margin-bottom:0" data-i18n="section.work">ИЗБРАННЫЕ РАБОТЫ</h2>
-          <a href="https://elements.envato.com/user/JustaMotion" target="_blank" rel="noopener" data-i18n="work.more">Ещё проекты →</a>
-        </div>
-        <div class="cases-grid" id="cases-grid">
-          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
-            <div class="case-thumb alabuga"><div class="play-icon"></div></div>
-            <div class="case-info">
-              <h4 data-i18n="case1.title">Ребрендинг Алабуги</h4>
-              <span data-i18n="case1.cat">SaaS-презентация</span>
-              <div class="case-tags">
-                <span class="tag">2D/3D</span>
-                <span class="tag">Rebranding</span>
-              </div>
+        <h2 class="section-title" data-i18n="section.work">ИЗБРАННЫЕ РАБОТЫ</h2>
+        <div class="work-links">
+          <a
+            class="work-link"
+            id="work-yandex"
+            href="https://disk.yandex.ru/d/Em9lTJpf1cYpPQ"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="work-link-thumb" aria-hidden="true"></div>
+            <div class="work-link-body">
+              <h4 data-i18n="work.yandex.title">Портфолио</h4>
+              <span data-i18n="work.yandex.sub">Yandex Disk ↗</span>
             </div>
-          </div>
-          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
-            <div class="case-thumb logo"><div class="play-icon"></div></div>
-            <div class="case-info">
-              <h4 data-i18n="case2.title">Анимация логотипа</h4>
-              <span data-i18n="case2.cat">9 вариантов</span>
-              <div class="case-tags">
-                <span class="tag">Logo</span>
-                <span class="tag">Brand</span>
-              </div>
+          </a>
+          <a
+            class="work-link"
+            id="work-envato"
+            href="https://elements.envato.com/user/JustaMotion"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="work-link-thumb envato" aria-hidden="true"></div>
+            <div class="work-link-body">
+              <h4 data-i18n="work.envato.title">JustaMotion</h4>
+              <span data-i18n="work.envato.sub">Envato ↗</span>
             </div>
-          </div>
-          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
-            <div class="case-thumb ads"><div class="play-icon"></div></div>
-            <div class="case-info">
-              <h4 data-i18n="case3.title">Рекламные креативы</h4>
-              <span data-i18n="case3.cat">Performance Ads</span>
-              <div class="case-tags">
-                <span class="tag">Reels</span>
-                <span class="tag">9:16</span>
-              </div>
-            </div>
-          </div>
-          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
-            <div class="case-thumb ai"><div class="play-icon"></div></div>
-            <div class="case-info">
-              <h4 data-i18n="case4.title">AI-продакшн</h4>
-              <span data-i18n="case4.cat">ComfyUI + Kling</span>
-              <div class="case-tags">
-                <span class="tag">AI</span>
-                <span class="tag">Pipeline</span>
-              </div>
-            </div>
-          </div>
-          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
-            <div class="case-thumb youtube"><div class="play-icon"></div></div>
-            <div class="case-info">
-              <h4 data-i18n="case5.title">Локализация YouTube</h4>
-              <span data-i18n="case5.cat">EN / ES / FR</span>
-              <div class="case-tags">
-                <span class="tag">Localization</span>
-              </div>
-            </div>
-          </div>
-          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
-            <div class="case-thumb envato"><div class="play-icon"></div></div>
-            <div class="case-info">
-              <h4 data-i18n="case6.title">JustaMotion</h4>
-              <span data-i18n="case6.cat">Envato Marketplace</span>
-              <div class="case-tags">
-                <span class="tag">155+ Products</span>
-                <span class="tag">1070+ Sales</span>
-              </div>
-            </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -1406,18 +1299,6 @@
     <p class="copyright">© 2026 Aynur Akhmametov</p>
   </footer>
 
-  <div id="work-modal" class="case-modal" hidden role="dialog" aria-modal="true" aria-labelledby="work-modal-title">
-    <div class="case-modal-box case-modal-box-wide">
-      <button type="button" class="case-modal-close" id="work-modal-close" aria-label="Close">&times;</button>
-      <h3 class="case-modal-title" id="work-modal-title" data-i18n="section.work">ИЗБРАННЫЕ РАБОТЫ</h3>
-      <ul class="work-modal-list" id="work-modal-list"></ul>
-      <div class="work-modal-actions">
-        <a class="case-modal-action" id="work-modal-yandex" href="https://disk.yandex.ru/d/Em9lTJpf1cYpPQ" target="_blank" rel="noopener" data-i18n="modal.open">Открыть портфолио</a>
-        <a class="case-modal-action" href="https://elements.envato.com/user/JustaMotion" target="_blank" rel="noopener" data-i18n="modal.openEnvato">Envato ↗</a>
-      </div>
-    </div>
-  </div>
-
-  <script src="js/main.js?v=20260819"></script>
+  <script src="js/main.js?v=20260821"></script>
 </body>
 </html>
