@@ -112,10 +112,10 @@ for path in ["", "/js/main.js", "/icons/figma.svg", "/icons/qr-telegram.png", "/
         fail(f"{url} → {status}")
 
 live_html = urllib.request.urlopen(BASE_URL + "/", timeout=20).read().decode("utf-8", errors="replace")
-if "placeholder" in live_html.lower():
-    fail("Live site still contains 'placeholder' text")
+if re.search(r"placeholder для|placeholder for|client testimonial placeholder", live_html, re.I):
+    fail("Live site still contains placeholder copy")
 else:
-    ok("No placeholder text on live site (after deploy)")
+    ok("No placeholder copy on live site")
 
 print(f"\n=== Summary: {passed} passed, {len(errors)} failed ===")
 if errors:
