@@ -127,7 +127,7 @@
   <p class="note">Видео воспроизводится со стриминга Yandex Disk — первый запуск может занять несколько секунд. Большие файлы (100+ МБ) лучше скачивать.</p>
 
   <div class="player-wrap" id="player-wrap" hidden>
-    <video id="player" controls playsinline preload="metadata"></video>
+    <video id="player" controls playsinline preload="metadata" crossorigin="anonymous"></video>
     <p class="player-label" id="player-label"></p>
     <p class="player-error" id="player-error" hidden></p>
   </div>
@@ -177,21 +177,32 @@
       return res.json();
     }
 
+    async function fileMeta(path) {
+      const q = new URLSearchParams({
+        public_key: PUBLIC_KEY,
+        path,
+        fields: 'file,name,size'
+      });
+      return apiGet(`${API}?${q}`);
+    }
+
+    /** Yandex отдаёт downloader URL — нужен редирект на storage для плеера */
+    async function resolveDirectUrl(path) {
+      const meta = await fileMeta(path);
+      if (!meta.file) throw new Error('no file url');
+      const res = await fetch(meta.file, { method: 'HEAD', redirect: 'follow' });
+      if (!res.ok && res.status !== 206) throw new Error('redirect ' + res.status);
+      return { url: res.url, name: meta.name, size: meta.size };
+    }
+
     async function downloadUrl(path) {
-      const q = new URLSearchParams({ public_key: PUBLIC_KEY, path });
-      const data = await apiGet(`${API}/download?${q}`);
-      return data.href;
+      const { url } = await resolveDirectUrl(path);
+      return url;
     }
 
     async function streamUrl(item) {
-      if (item.file) return item.file;
-      const q = new URLSearchParams({
-        public_key: PUBLIC_KEY,
-        path: item.path,
-        fields: 'file'
-      });
-      const data = await apiGet(`${API}?${q}`);
-      return data.file;
+      const { url } = await resolveDirectUrl(item.path);
+      return url;
     }
 
     function markActive(name) {
@@ -217,7 +228,7 @@
         await player.play();
       } catch (err) {
         playerError.hidden = false;
-        playerError.textContent = 'Не удалось воспроизвести. Попробуйте «Скачать» или откройте позже.';
+        playerError.textContent = 'Не удалось воспроизвести. Нажмите «Скачать» или откройте файл на Yandex Disk.';
         console.warn(err);
       }
     }
@@ -248,9 +259,17 @@
           dl.disabled = true;
           dl.textContent = '…';
           try {
-            location.href = await downloadUrl(item.path);
+            const { url, name } = await resolveDirectUrl(item.path);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = name || item.name;
+            a.rel = 'noopener';
+            a.click();
+            dl.textContent = 'Скачать';
           } catch {
             dl.textContent = 'Ошибка';
+          } finally {
+            dl.disabled = false;
           }
         });
         actions.appendChild(dl);
@@ -286,9 +305,18 @@
           zipBtn.disabled = true;
           zipBtn.textContent = 'Подготовка…';
           try {
-            location.href = await downloadUrl(folderPath);
+            const q = new URLSearchParams({ public_key: PUBLIC_KEY, path: folderPath });
+            const data = await apiGet(`${API}/download?${q}`);
+            const res = await fetch(data.href, { redirect: 'follow' });
+            const a = document.createElement('a');
+            a.href = res.url;
+            a.rel = 'noopener';
+            a.click();
+            zipBtn.textContent = 'Скачать папку';
           } catch {
             zipBtn.textContent = 'Ошибка';
+          } finally {
+            zipBtn.disabled = false;
           }
         });
 
