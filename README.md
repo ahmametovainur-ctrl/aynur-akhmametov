@@ -1,43 +1,99 @@
-# Portfolio Site — Aynur Akhmametov
+# Aynur Akhmametov — Motion Portfolio
 
-Production-сайт портфолио (static HTML). Собран по макету v3.
+Senior Motion Designer · 8 лет опыта · Казань, удалённо
 
-## Структура
+[![Live site](https://img.shields.io/badge/site-GitHub%20Pages-8b1e2d?style=for-the-badge&logo=github)](https://ahmametovainur-ctrl.github.io/aynur-akhmametov/)
+[![Portfolio](https://img.shields.io/badge/video-Yandex%20Disk-e8e0d4?style=for-the-badge)](https://disk.yandex.ru/d/Em9lTJpf1cYpPQ)
+[![Envato](https://img.shields.io/badge/templates-JustaMotion-81b441?style=for-the-badge&logo=envato)](https://elements.envato.com/user/JustaMotion)
+
+---
+
+## Live
+
+**Сайт:** https://ahmametovainur-ctrl.github.io/aynur-akhmametov/
+
+- Showreel 2026 с автозапуском при скролле
+- RU / EN переключение
+- Портфолио → Yandex Disk
+- Envato → JustaMotion
+
+---
+
+## Структура репозитория
 
 ```
-portfolio-site/
-├── index.html          # главная страница
-├── js/main.js          # i18n + автозапуск showreel
-├── icons/              # SVG иконки инструментов
-├── videos/showreel.mp4 # symlink → Портфолио/Showreel 2026.mp4
-└── content/cases.json  # метаданные кейсов
+├── index.html              # Production-сайт (GitHub Pages)
+├── js/main.js              # i18n, showreel, UI
+├── images/                 # Обложки блока «Избранные работы»
+├── icons/                  # SVG-иконки инструментов
+├── videos/showreel.mp4     # Showreel (~58 MB)
+├── content/cases.json      # Метаданные кейсов
+├── folder.html             # Просмотр папок Yandex Disk
+├── portfolio-mockup/       # HTML-макет v3 (локальный прототип)
+├── docs/                   # Резюме, письма, чеклисты
+│   ├── resume/
+│   ├── cover-letters/
+│   └── job-search/
+└── tests/test-site.py      # Автопроверки сайта
 ```
 
-## Как открыть локально
+---
+
+## Быстрый старт
+
+### Открыть сайт локально
 
 ```bash
-open portfolio-site/index.html
-```
-
-Или запустите локальный сервер (рекомендуется для видео):
-
-```bash
-cd portfolio-site && python3 -m http.server 8080
+cd portfolio-site
+python3 -m http.server 8080
 # → http://localhost:8080
 ```
 
-## Showreel — автозапуск
+### Запустить тесты
 
-При скролле ко второму экрану (`#showreel`) видео **запускается автоматически со звуком** (нативный плеер с controls).
+```bash
+python3 tests/test-site.py
+```
+
+### Открыть макет
+
+```bash
+open portfolio-mockup/index.html
+```
+
+---
+
+## Ссылки
+
+| Ресурс | URL |
+|--------|-----|
+| Сайт | https://ahmametovainur-ctrl.github.io/aynur-akhmametov/ |
+| Портфолио (видео) | https://disk.yandex.ru/d/Em9lTJpf1cYpPQ |
+| Envato | https://elements.envato.com/user/JustaMotion |
+| Telegram | https://t.me/tandyy9 |
+| Email | ahmametovainur@gmail.com |
+
+---
+
+## Что не в репозитории
+
+Исходные видео кейсов (~2.2 GB) лежат на **Yandex Disk** — в GitHub они не загружаются из‑за лимита размера. Полный список файлов: [docs/portfolio-manifest.json](docs/portfolio-manifest.json).
+
+История чатов Cursor хранится локально в IDE и в репозиторий не попадает.
+
+---
 
 ## Деплой
 
-1. Скопируйте `Showreel 2026.mp4` в `portfolio-site/videos/` (не symlink)
-2. Загрузите папку на [Vercel](https://vercel.com), [Netlify](https://netlify.com) или GitHub Pages
-3. Либо установите Node.js и мигрируйте на Next.js
+Push в `main` → GitHub Pages обновляется автоматически.
 
-## Контакты на сайте
+Подробнее: [DEPLOY.md](DEPLOY.md)
 
-- Email: ahmametovainur@gmail.com
+---
+
+## Контакты
+
+**Aynur Akhmametov** — Senior Motion Designer
+
 - Telegram: [@tandyy9](https://t.me/tandyy9)
-- Envato: [JustaMotion](https://elements.envato.com/user/JustaMotion)
+- Email: ahmametovainur@gmail.com
