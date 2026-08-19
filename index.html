@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Aynur Akhmametov — Senior Motion Designer. 8 лет опыта, showreel, ребрендинг, AI-продакшн, Envato JustaMotion." />
   <meta property="og:title" content="Aynur Akhmametov — Motion Portfolio" />
@@ -571,10 +573,32 @@
     }
 
     .work-link-desc {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       line-height: 1.55;
-      color: var(--text-muted);
+      color: #c4bdb3;
       margin: 0.35rem 0 0.9rem;
+    }
+
+    .work-link-list {
+      list-style: none;
+      margin: 0.5rem 0 1rem;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .work-link-list li {
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #c4bdb3;
+      padding-left: 0.85rem;
+      position: relative;
+    }
+
+    .work-link-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
     }
 
     .work-link-cta {
@@ -1172,7 +1196,14 @@
             <div class="work-link-thumb" aria-hidden="true"></div>
             <div class="work-link-body">
               <h4 data-i18n="work.yandex.title">Портфолио</h4>
-              <p class="work-link-desc" data-i18n="work.yandex.desc">Ребрендинг Алабуги, анимация логотипа, рекламные креативы, AI-ролики и локализация YouTube — видео в полном качестве.</p>
+              <ul class="work-link-list">
+                <li data-i18n="work.yandex.item1">Ребрендинг Алабуги</li>
+                <li data-i18n="work.yandex.item2">Анимация логотипа</li>
+                <li data-i18n="work.yandex.item3">Рекламные креативы</li>
+                <li data-i18n="work.yandex.item4">AI-ролики</li>
+                <li data-i18n="work.yandex.item5">Локализация YouTube</li>
+              </ul>
+              <p class="work-link-desc" data-i18n="work.yandex.desc">Видео в полном качестве — смотреть на Yandex Disk.</p>
               <span class="work-link-cta" data-i18n="work.yandex.sub">Yandex Disk ↗</span>
             </div>
           </a>
@@ -1308,6 +1339,6 @@
     <p class="copyright">© 2026 Aynur Akhmametov</p>
   </footer>
 
-  <script src="js/main.js?v=20260822"></script>
+  <script src="js/main.js?v=20260823"></script>
 </body>
 </html>
