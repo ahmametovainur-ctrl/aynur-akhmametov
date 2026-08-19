@@ -4,11 +4,9 @@ const SITE = {
   telegram: 'https://t.me/tandyy9'
 };
 
-/** Страница просмотра папки с inline-плеером */
-function yandexFolderUrl(folderName, featuredFile) {
-  let url = `folder.html?path=${encodeURIComponent('/' + folderName)}`;
-  if (featuredFile) url += `&play=${encodeURIComponent(featuredFile)}`;
-  return url;
+/** Страница материалов кейса по теме */
+function caseFolderUrl(caseId) {
+  return `folder.html?case=${caseId}`;
 }
 
 const i18n = {
@@ -123,11 +121,11 @@ const i18n = {
 };
 
 const caseItems = [
-  { id: 'alabuga', titleKey: 'case1.title', catKey: 'case1.cat', descKey: 'case1.desc', folder: 'SAAS Анимация', featured: 'Final_Final.mp4', href: yandexFolderUrl('SAAS Анимация', 'Final_Final.mp4') },
-  { id: 'logo', titleKey: 'case2.title', catKey: 'case2.cat', descKey: 'case2.desc', folder: 'Анимация логотипа', featured: '1 вар.mp4', href: yandexFolderUrl('Анимация логотипа', '1 вар.mp4') },
-  { id: 'ads', titleKey: 'case3.title', catKey: 'case3.cat', descKey: 'case3.desc', folder: 'Креативы', featured: 'Creative 01 1080х1920.mp4', href: yandexFolderUrl('Креативы', 'Creative 01 1080х1920.mp4') },
-  { id: 'ai', titleKey: 'case4.title', catKey: 'case4.cat', descKey: 'case4.desc', folder: 'AI', featured: 'Мультреклама.mp4', href: yandexFolderUrl('AI', 'Мультреклама.mp4') },
-  { id: 'youtube', titleKey: 'case5.title', catKey: 'case5.cat', descKey: 'case5.desc', folder: 'Ролик на ютуб про города России', featured: '1 часть ролика - Англ.mp4', href: yandexFolderUrl('Ролик на ютуб про города России', '1 часть ролика - Англ.mp4') },
+  { id: 'alabuga', titleKey: 'case1.title', catKey: 'case1.cat', descKey: 'case1.desc', folder: 'SAAS Анимация', href: caseFolderUrl('alabuga') },
+  { id: 'logo', titleKey: 'case2.title', catKey: 'case2.cat', descKey: 'case2.desc', folder: 'Анимация логотипа', href: caseFolderUrl('logo') },
+  { id: 'ads', titleKey: 'case3.title', catKey: 'case3.cat', descKey: 'case3.desc', folder: 'Креативы', href: caseFolderUrl('ads') },
+  { id: 'ai', titleKey: 'case4.title', catKey: 'case4.cat', descKey: 'case4.desc', folder: 'AI', href: caseFolderUrl('ai') },
+  { id: 'youtube', titleKey: 'case5.title', catKey: 'case5.cat', descKey: 'case5.desc', folder: 'Ролик на ютуб про города России', href: caseFolderUrl('youtube') },
   { id: 'envato', titleKey: 'case6.title', catKey: 'case6.cat', descKey: 'case6.desc', href: SITE.envato, envato: true }
 ];
 
@@ -311,13 +309,23 @@ function initCaseCards() {
 
     card.addEventListener('click', () => {
       const caseItem = caseItems.find((c) => c.id === card.dataset.case);
-      if (caseItem?.href) window.open(caseItem.href, '_blank', 'noopener');
+      if (!caseItem?.href) return;
+      if (caseItem.envato) {
+        window.open(caseItem.href, '_blank', 'noopener');
+      } else {
+        location.href = caseItem.href;
+      }
     });
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         const caseItem = caseItems.find((c) => c.id === card.dataset.case);
-        if (caseItem?.href) window.open(caseItem.href, '_blank', 'noopener');
+        if (!caseItem?.href) return;
+        if (caseItem.envato) {
+          window.open(caseItem.href, '_blank', 'noopener');
+        } else {
+          location.href = caseItem.href;
+        }
       }
     });
   });

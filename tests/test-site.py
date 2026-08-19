@@ -103,33 +103,27 @@ else:
     fail(f"Expected 6 case cards, found {len(cases)}")
 
 print("\n=== Case folder links ===")
-folders = [
-    "SAAS Анимация",
-    "Анимация логотипа",
-    "Креативы",
-    "AI",
-    "Ролик на ютуб про города России",
-]
-for folder in folders:
-    if f"'{folder}'" in js and "yandexFolderUrl(" in js:
-        ok(f"folder link: {folder}")
+case_ids = ["alabuga", "logo", "ads", "ai", "youtube"]
+for cid in case_ids:
+    if f"caseFolderUrl('{cid}')" in js or f'case={cid}' in js:
+        ok(f"case folder: {cid}")
     else:
-        fail(f"Missing yandexFolderUrl for: {folder}")
+        fail(f"Missing case folder link: {cid}")
 
 if (ROOT / "folder.html").is_file():
     ok("folder.html viewer page")
 else:
     fail("Missing folder.html")
 
-if "folder.html?path=" in js:
-    ok("case hrefs use folder viewer")
+if "folder.html?case=" in js:
+    ok("case hrefs use themed folders")
 else:
-    fail("case hrefs should use folder.html viewer")
+    fail("case hrefs should use folder.html?case=")
 
-if "&play=" in js or "featured:" in js:
-    ok("featured video autoplay in case links")
+if "yandexFolderUrl" in js:
+    fail("legacy yandexFolderUrl still in main.js")
 else:
-    fail("case links should include featured video")
+    ok("no legacy yandexFolderUrl")
 
 if 'id="modal-folder"' in html:
     ok("modal-folder element")
