@@ -87,7 +87,7 @@ for key in sorted(html_keys):
     else:
         fail(f"Missing i18n key in main.js: {key}")
 
-required_ids = ["showreel", "showreel-video", "case-modal", "lang-ru", "lang-en"]
+required_ids = ["showreel", "showreel-video", "work-modal", "lang-ru", "lang-en"]
 print("\n=== Required DOM ids ===")
 for el_id in required_ids:
     if f'id="{el_id}"' in html or f"id='{el_id}'" in html:
@@ -96,32 +96,27 @@ for el_id in required_ids:
         fail(f"Missing id: {el_id}")
 
 print("\n=== Case cards ===")
-cases = re.findall(r'data-case="([^"]+)"', html)
+cases = re.findall(r'class="case-card"', html)
 if len(cases) == 6:
-    ok("6 case cards with data-case")
+    ok("6 case cards")
 else:
     fail(f"Expected 6 case cards, found {len(cases)}")
 
-print("\n=== Case modal ===")
-if 'id="case-modal"' in html and 'openCaseModal' in js:
-    ok("case modal wired")
+if 'data-case=' not in html:
+    ok("no per-case modal triggers")
 else:
-    fail("case modal missing")
+    fail("case cards still use data-case attributes")
 
-if "YANDEX_PORTFOLIO" in js and "openCaseModal" in js:
-    ok("cases link to shared Yandex portfolio")
+print("\n=== Work modal ===")
+if 'id="work-modal"' in html and 'openWorkModal' in js:
+    ok("single work modal")
 else:
-    fail("cases should use shared Yandex portfolio URL")
+    fail("single work modal missing")
 
-if "caseFolderUrl" in js or "folder.html?case=" in js:
-    fail("cases should not use per-case folder pages")
+if 'id="work-modal-yandex"' in html and "Em9lTJpf1cYpPQ" in html:
+    ok("work modal yandex link")
 else:
-    ok("no per-case folder navigation in main.js")
-
-if 'id="modal-folder"' in html:
-    ok("modal-folder element")
-else:
-    fail("Missing #modal-folder in modal")
+    fail("work modal yandex link missing")
 
 if html.count('data-copy="@tandyy9"') >= 2:
     ok("telegram copy buttons")

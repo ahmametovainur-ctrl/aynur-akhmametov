@@ -926,6 +926,41 @@
       position: relative;
     }
 
+    .case-modal-box-wide {
+      max-width: 560px;
+    }
+
+    .work-modal-list {
+      list-style: none;
+      margin: 1.25rem 0 1.75rem;
+      border-top: 1px solid rgba(139,30,45,0.2);
+    }
+
+    .work-modal-list li {
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(139,30,45,0.15);
+      font-size: 0.88rem;
+    }
+
+    .work-modal-list strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .work-modal-list span {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .work-modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
     .case-modal-close {
       position: absolute;
       top: 1rem; right: 1rem;
@@ -1187,8 +1222,8 @@
           <h2 class="section-title" style="margin-bottom:0" data-i18n="section.work">ИЗБРАННЫЕ РАБОТЫ</h2>
           <a href="https://elements.envato.com/user/JustaMotion" target="_blank" rel="noopener" data-i18n="work.more">Ещё проекты →</a>
         </div>
-        <div class="cases-grid">
-          <div class="case-card" data-case="alabuga" tabindex="0" role="button">
+        <div class="cases-grid" id="cases-grid">
+          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
             <div class="case-thumb alabuga"><div class="play-icon"></div></div>
             <div class="case-info">
               <h4 data-i18n="case1.title">Ребрендинг Алабуги</h4>
@@ -1199,7 +1234,7 @@
               </div>
             </div>
           </div>
-          <div class="case-card" data-case="logo" tabindex="0" role="button">
+          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
             <div class="case-thumb logo"><div class="play-icon"></div></div>
             <div class="case-info">
               <h4 data-i18n="case2.title">Анимация логотипа</h4>
@@ -1210,7 +1245,7 @@
               </div>
             </div>
           </div>
-          <div class="case-card" data-case="ads" tabindex="0" role="button">
+          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
             <div class="case-thumb ads"><div class="play-icon"></div></div>
             <div class="case-info">
               <h4 data-i18n="case3.title">Рекламные креативы</h4>
@@ -1221,7 +1256,7 @@
               </div>
             </div>
           </div>
-          <div class="case-card" data-case="ai" tabindex="0" role="button">
+          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
             <div class="case-thumb ai"><div class="play-icon"></div></div>
             <div class="case-info">
               <h4 data-i18n="case4.title">AI-продакшн</h4>
@@ -1232,7 +1267,7 @@
               </div>
             </div>
           </div>
-          <div class="case-card" data-case="youtube" tabindex="0" role="button">
+          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
             <div class="case-thumb youtube"><div class="play-icon"></div></div>
             <div class="case-info">
               <h4 data-i18n="case5.title">Локализация YouTube</h4>
@@ -1242,7 +1277,7 @@
               </div>
             </div>
           </div>
-          <div class="case-card" data-case="envato" tabindex="0" role="button">
+          <div class="case-card" tabindex="0" role="button" aria-label="Избранные работы">
             <div class="case-thumb envato"><div class="play-icon"></div></div>
             <div class="case-info">
               <h4 data-i18n="case6.title">JustaMotion</h4>
@@ -1371,17 +1406,18 @@
     <p class="copyright">© 2026 Aynur Akhmametov</p>
   </footer>
 
-  <div id="case-modal" class="case-modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="case-modal-box">
-      <button type="button" class="case-modal-close" id="modal-close" aria-label="Close">&times;</button>
-      <p class="case-modal-cat" id="modal-cat"></p>
-      <h3 class="case-modal-title" id="modal-title"></h3>
-      <p class="case-modal-desc" id="modal-desc"></p>
-      <p class="case-modal-folder" id="modal-folder" hidden></p>
-      <a class="case-modal-action" id="modal-action" href="#" data-i18n="modal.open">Открыть портфолио</a>
+  <div id="work-modal" class="case-modal" hidden role="dialog" aria-modal="true" aria-labelledby="work-modal-title">
+    <div class="case-modal-box case-modal-box-wide">
+      <button type="button" class="case-modal-close" id="work-modal-close" aria-label="Close">&times;</button>
+      <h3 class="case-modal-title" id="work-modal-title" data-i18n="section.work">ИЗБРАННЫЕ РАБОТЫ</h3>
+      <ul class="work-modal-list" id="work-modal-list"></ul>
+      <div class="work-modal-actions">
+        <a class="case-modal-action" id="work-modal-yandex" href="https://disk.yandex.ru/d/Em9lTJpf1cYpPQ" target="_blank" rel="noopener" data-i18n="modal.open">Открыть портфолио</a>
+        <a class="case-modal-action" href="https://elements.envato.com/user/JustaMotion" target="_blank" rel="noopener" data-i18n="modal.openEnvato">Envato ↗</a>
+      </div>
     </div>
   </div>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=20260819"></script>
 </body>
 </html>

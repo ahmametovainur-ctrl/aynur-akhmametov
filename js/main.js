@@ -152,11 +152,16 @@ function setLang(l) {
     const val = i18n[l][key];
     if (val !== undefined) el.setAttribute('aria-label', val);
   });
-  const modal = document.getElementById('case-modal');
-  if (modal && !modal.hidden) {
-    const active = modal.dataset.activeCase;
-    if (active) openCaseModal(active);
-  }
+  const modal = document.getElementById('work-modal');
+  if (modal && !modal.hidden) renderWorkModalList();
+}
+
+function renderWorkModalList() {
+  const list = document.getElementById('work-modal-list');
+  if (!list) return;
+  list.innerHTML = caseItems.map((item) =>
+    `<li><strong>${t(item.titleKey)}</strong><span>${t(item.catKey)}</span></li>`
+  ).join('');
 }
 
 function initShowreelAutoplay() {
@@ -166,31 +171,30 @@ function initShowreelAutoplay() {
   if (!section || !video) return;
 
   let wasVisible = false;
-  let userScrolled = false;
-
-  ['wheel', 'touchmove', 'keydown', 'click'].forEach((ev) => {
-    window.addEventListener(ev, () => { userScrolled = true; }, { passive: true });
-  });
 
   async function playShowreel() {
     video.volume = 1;
-    video.muted = !userScrolled;
+    video.muted = false;
     try {
       await video.play();
-      if (unmuteBtn) unmuteBtn.hidden = !video.muted;
-      return;
+      if (unmuteBtn) unmuteBtn.hidden = true;
     } catch {
-      if (video.muted) return;
-    }
-
-    video.muted = true;
-    try {
-      await video.play();
+      video.pause();
       if (unmuteBtn) unmuteBtn.hidden = false;
-    } catch (e) {
-      console.warn('Showreel autoplay blocked', e);
     }
   }
+
+  section.addEventListener('click', async () => {
+    if (!video.muted && !video.paused) return;
+    video.muted = false;
+    video.volume = 1;
+    try {
+      await video.play();
+      if (unmuteBtn) unmuteBtn.hidden = true;
+    } catch (err) {
+      console.warn('Showreel play failed', err);
+    }
+  });
 
   if (unmuteBtn) {
     unmuteBtn.addEventListener('click', async (e) => {
@@ -208,7 +212,6 @@ function initShowreelAutoplay() {
 
   document.querySelectorAll('a[href="#showreel"]').forEach((link) => {
     link.addEventListener('click', () => {
-      userScrolled = true;
       setTimeout(() => playShowreel(), 600);
     });
   });
@@ -232,31 +235,18 @@ function initShowreelAutoplay() {
   observer.observe(section);
 }
 
-function openCaseModal(caseId) {
-  const item = caseItems.find((c) => c.id === caseId);
-  const modal = document.getElementById('case-modal');
-  if (!item || !modal) return;
-
-  modal.dataset.activeCase = caseId;
+function openWorkModal() {
+  const modal = document.getElementById('work-modal');
+  if (!modal) return;
+  renderWorkModalList();
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
-  document.getElementById('modal-title').textContent = t(item.titleKey);
-  document.getElementById('modal-cat').textContent = t(item.catKey);
-  document.getElementById('modal-desc').textContent = t(item.descKey);
-  const folderEl = document.getElementById('modal-folder');
-  if (folderEl) folderEl.hidden = true;
-  const btn = document.getElementById('modal-action');
-  btn.textContent = item.envato ? t('modal.openEnvato') : t('modal.open');
-  btn.href = item.href;
-  btn.target = '_blank';
-  btn.rel = 'noopener';
 }
 
-function closeCaseModal() {
-  const modal = document.getElementById('case-modal');
+function closeWorkModal() {
+  const modal = document.getElementById('work-modal');
   if (!modal) return;
   modal.hidden = true;
-  delete modal.dataset.activeCase;
   document.body.style.overflow = '';
 }
 
@@ -301,22 +291,22 @@ function initCopyButtons() {
 }
 
 function initCaseCards() {
-  document.querySelectorAll('[data-case]').forEach((card) => {
-    card.addEventListener('click', () => openCaseModal(card.dataset.case));
+  document.querySelectorAll('.case-card').forEach((card) => {
+    card.addEventListener('click', openWorkModal);
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openCaseModal(card.dataset.case);
+        openWorkModal();
       }
     });
   });
 
-  document.getElementById('modal-close')?.addEventListener('click', closeCaseModal);
-  document.getElementById('case-modal')?.addEventListener('click', (e) => {
-    if (e.target.id === 'case-modal') closeCaseModal();
+  document.getElementById('work-modal-close')?.addEventListener('click', closeWorkModal);
+  document.getElementById('work-modal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'work-modal') closeWorkModal();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeCaseModal();
+    if (e.key === 'Escape') closeWorkModal();
   });
 }
 
