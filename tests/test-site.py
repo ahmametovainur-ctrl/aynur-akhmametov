@@ -8,7 +8,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE_URL = "https://ozik14.github.io/aynur-akhmametov"
+BASE_URL = "https://ahmametovainur-ctrl.github.io/aynur-akhmametov"
 errors = []
 passed = 0
 
