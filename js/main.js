@@ -17,7 +17,6 @@ const i18n = {
     'cta.cases': 'Кейсы',
     'hero.scroll': 'Шоурил',
     'showreel.sub': 'Senior Motion Designer',
-    'showreel.unmute': 'Включить звук',
     'section.services': 'ЧЕМ ЗАНИМАЮСЬ',
     'section.process': 'МОЙ ПРОЦЕСС',
     'section.work': 'ИЗБРАННЫЕ РАБОТЫ',
@@ -65,7 +64,6 @@ const i18n = {
     'cta.cases': 'View Cases',
     'hero.scroll': 'Showreel',
     'showreel.sub': 'Senior Motion Designer',
-    'showreel.unmute': 'Unmute',
     'section.services': 'WHAT I DO',
     'section.process': 'MY PROCESS',
     'section.work': 'FEATURED WORK',
@@ -135,53 +133,42 @@ function setLang(l) {
 function initShowreelAutoplay() {
   const section = document.getElementById('showreel');
   const video = document.getElementById('showreel-video');
-  const unmuteBtn = document.getElementById('showreel-unmute');
   if (!section || !video) return;
 
   let wasVisible = false;
+  let needsUnlock = false;
 
   async function playShowreel() {
     video.volume = 1;
     video.muted = false;
     try {
       await video.play();
-      if (unmuteBtn) unmuteBtn.hidden = true;
+      needsUnlock = false;
     } catch {
-      video.pause();
-      if (unmuteBtn) unmuteBtn.hidden = false;
+      needsUnlock = true;
     }
   }
 
-  section.addEventListener('click', async () => {
-    if (!video.muted && !video.paused) return;
-    video.muted = false;
-    video.volume = 1;
-    try {
-      await video.play();
-      if (unmuteBtn) unmuteBtn.hidden = true;
-    } catch (err) {
-      console.warn('Showreel play failed', err);
-    }
+  function tryPlayIfVisible() {
+    const rect = section.getBoundingClientRect();
+    const visible = rect.top < window.innerHeight * 0.75 && rect.bottom > window.innerHeight * 0.25;
+    if (visible) playShowreel();
+  }
+
+  ['click', 'touchstart', 'keydown', 'scroll'].forEach((eventName) => {
+    document.addEventListener(eventName, () => {
+      if (needsUnlock) tryPlayIfVisible();
+    }, { passive: true });
   });
-
-  if (unmuteBtn) {
-    unmuteBtn.addEventListener('click', async (e) => {
-      e.stopPropagation();
-      video.muted = false;
-      video.volume = 1;
-      try {
-        await video.play();
-        unmuteBtn.hidden = true;
-      } catch (err) {
-        console.warn('Unmute failed', err);
-      }
-    });
-  }
 
   document.querySelectorAll('a[href="#showreel"]').forEach((link) => {
     link.addEventListener('click', () => {
-      setTimeout(() => playShowreel(), 600);
+      setTimeout(playShowreel, 600);
     });
+  });
+
+  section.addEventListener('click', () => {
+    playShowreel();
   });
 
   const observer = new IntersectionObserver(

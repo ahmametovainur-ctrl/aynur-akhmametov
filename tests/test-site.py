@@ -116,6 +116,11 @@ if 'openWorkModal' not in js:
 else:
     fail("work modal JS still present")
 
+if 'showreel-unmute' not in html:
+    ok("no showreel unmute button")
+else:
+    fail("showreel unmute button should be removed")
+
 if html.count('data-copy="@tandyy9"') >= 2:
     ok("telegram copy buttons")
 else:
