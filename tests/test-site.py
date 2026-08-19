@@ -102,28 +102,21 @@ if len(cases) == 6:
 else:
     fail(f"Expected 6 case cards, found {len(cases)}")
 
-print("\n=== Case folder links ===")
-case_ids = ["alabuga", "logo", "ads", "ai", "youtube"]
-for cid in case_ids:
-    if f"caseFolderUrl('{cid}')" in js or f'case={cid}' in js:
-        ok(f"case folder: {cid}")
-    else:
-        fail(f"Missing case folder link: {cid}")
-
-if (ROOT / "folder.html").is_file():
-    ok("folder.html viewer page")
+print("\n=== Case modal ===")
+if 'id="case-modal"' in html and 'openCaseModal' in js:
+    ok("case modal wired")
 else:
-    fail("Missing folder.html")
+    fail("case modal missing")
 
-if "folder.html?case=" in js:
-    ok("case hrefs use themed folders")
+if "YANDEX_PORTFOLIO" in js and "openCaseModal" in js:
+    ok("cases link to shared Yandex portfolio")
 else:
-    fail("case hrefs should use folder.html?case=")
+    fail("cases should use shared Yandex portfolio URL")
 
-if "yandexFolderUrl" in js:
-    fail("legacy yandexFolderUrl still in main.js")
+if "caseFolderUrl" in js or "folder.html?case=" in js:
+    fail("cases should not use per-case folder pages")
 else:
-    ok("no legacy yandexFolderUrl")
+    ok("no per-case folder navigation in main.js")
 
 if 'id="modal-folder"' in html:
     ok("modal-folder element")

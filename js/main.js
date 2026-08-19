@@ -4,10 +4,8 @@ const SITE = {
   telegram: 'https://t.me/tandyy9'
 };
 
-/** Страница материалов кейса по теме */
-function caseFolderUrl(caseId) {
-  return `folder.html?case=${caseId}`;
-}
+/** Общая папка портфолио на Yandex Disk */
+const YANDEX_PORTFOLIO = SITE.yandexBase;
 
 const i18n = {
   ru: {
@@ -60,9 +58,8 @@ const i18n = {
     'footer.tagline': 'СОЗДАЮ ДВИЖЕНИЕ.<br>РАССКАЗЫВАЮ ИСТОРИИ.',
     'tg.copied': 'Скопировано!',
     'modal.close': 'Закрыть',
-    'modal.open': 'Открыть папку',
+    'modal.open': 'Открыть портфолио',
     'modal.openEnvato': 'Открыть на Envato',
-    'modal.folder': 'Папка'
   },
   en: {
     'topbar.left': 'MOTION PORTFOLIO',
@@ -114,18 +111,17 @@ const i18n = {
     'footer.tagline': 'CRAFTING MOTION.<br>BUILDING STORIES.',
     'tg.copied': 'Copied!',
     'modal.close': 'Close',
-    'modal.open': 'Open folder',
+    'modal.open': 'Open portfolio',
     'modal.openEnvato': 'Open on Envato',
-    'modal.folder': 'Folder'
   }
 };
 
 const caseItems = [
-  { id: 'alabuga', titleKey: 'case1.title', catKey: 'case1.cat', descKey: 'case1.desc', folder: 'SAAS Анимация', href: caseFolderUrl('alabuga') },
-  { id: 'logo', titleKey: 'case2.title', catKey: 'case2.cat', descKey: 'case2.desc', folder: 'Анимация логотипа', href: caseFolderUrl('logo') },
-  { id: 'ads', titleKey: 'case3.title', catKey: 'case3.cat', descKey: 'case3.desc', folder: 'Креативы', href: caseFolderUrl('ads') },
-  { id: 'ai', titleKey: 'case4.title', catKey: 'case4.cat', descKey: 'case4.desc', folder: 'AI', href: caseFolderUrl('ai') },
-  { id: 'youtube', titleKey: 'case5.title', catKey: 'case5.cat', descKey: 'case5.desc', folder: 'Ролик на ютуб про города России', href: caseFolderUrl('youtube') },
+  { id: 'alabuga', titleKey: 'case1.title', catKey: 'case1.cat', descKey: 'case1.desc', href: YANDEX_PORTFOLIO },
+  { id: 'logo', titleKey: 'case2.title', catKey: 'case2.cat', descKey: 'case2.desc', href: YANDEX_PORTFOLIO },
+  { id: 'ads', titleKey: 'case3.title', catKey: 'case3.cat', descKey: 'case3.desc', href: YANDEX_PORTFOLIO },
+  { id: 'ai', titleKey: 'case4.title', catKey: 'case4.cat', descKey: 'case4.desc', href: YANDEX_PORTFOLIO },
+  { id: 'youtube', titleKey: 'case5.title', catKey: 'case5.cat', descKey: 'case5.desc', href: YANDEX_PORTFOLIO },
   { id: 'envato', titleKey: 'case6.title', catKey: 'case6.cat', descKey: 'case6.desc', href: SITE.envato, envato: true }
 ];
 
@@ -170,21 +166,29 @@ function initShowreelAutoplay() {
   if (!section || !video) return;
 
   let wasVisible = false;
+  let userScrolled = false;
+
+  ['wheel', 'touchmove', 'keydown', 'click'].forEach((ev) => {
+    window.addEventListener(ev, () => { userScrolled = true; }, { passive: true });
+  });
 
   async function playShowreel() {
-    video.muted = false;
+    video.volume = 1;
+    video.muted = !userScrolled;
     try {
       await video.play();
-      if (unmuteBtn) unmuteBtn.hidden = true;
+      if (unmuteBtn) unmuteBtn.hidden = !video.muted;
       return;
     } catch {
-      video.muted = true;
-      try {
-        await video.play();
-        if (unmuteBtn) unmuteBtn.hidden = false;
-      } catch (e) {
-        console.warn('Showreel autoplay blocked', e);
-      }
+      if (video.muted) return;
+    }
+
+    video.muted = true;
+    try {
+      await video.play();
+      if (unmuteBtn) unmuteBtn.hidden = false;
+    } catch (e) {
+      console.warn('Showreel autoplay blocked', e);
     }
   }
 
@@ -204,6 +208,7 @@ function initShowreelAutoplay() {
 
   document.querySelectorAll('a[href="#showreel"]').forEach((link) => {
     link.addEventListener('click', () => {
+      userScrolled = true;
       setTimeout(() => playShowreel(), 600);
     });
   });
@@ -239,14 +244,7 @@ function openCaseModal(caseId) {
   document.getElementById('modal-cat').textContent = t(item.catKey);
   document.getElementById('modal-desc').textContent = t(item.descKey);
   const folderEl = document.getElementById('modal-folder');
-  if (folderEl) {
-    if (item.folder) {
-      folderEl.hidden = false;
-      folderEl.textContent = `${t('modal.folder')}: ${item.folder}`;
-    } else {
-      folderEl.hidden = true;
-    }
-  }
+  if (folderEl) folderEl.hidden = true;
   const btn = document.getElementById('modal-action');
   btn.textContent = item.envato ? t('modal.openEnvato') : t('modal.open');
   btn.href = item.href;
@@ -304,28 +302,11 @@ function initCopyButtons() {
 
 function initCaseCards() {
   document.querySelectorAll('[data-case]').forEach((card) => {
-    const item = caseItems.find((c) => c.id === card.dataset.case);
-    if (item?.href) card.dataset.href = item.href;
-
-    card.addEventListener('click', () => {
-      const caseItem = caseItems.find((c) => c.id === card.dataset.case);
-      if (!caseItem?.href) return;
-      if (caseItem.envato) {
-        window.open(caseItem.href, '_blank', 'noopener');
-      } else {
-        location.href = caseItem.href;
-      }
-    });
+    card.addEventListener('click', () => openCaseModal(card.dataset.case));
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        const caseItem = caseItems.find((c) => c.id === card.dataset.case);
-        if (!caseItem?.href) return;
-        if (caseItem.envato) {
-          window.open(caseItem.href, '_blank', 'noopener');
-        } else {
-          location.href = caseItem.href;
-        }
+        openCaseModal(card.dataset.case);
       }
     });
   });
