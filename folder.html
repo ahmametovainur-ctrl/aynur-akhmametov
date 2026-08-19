@@ -14,7 +14,6 @@
       --accent: #8B1E2D;
       --text: #E8E0D4;
       --text-muted: #9a9a9a;
-      --card: #141414;
       --line: rgba(139, 30, 45, 0.35);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,7 +45,30 @@
       font-size: 0.75rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .player-wrap {
       margin-bottom: 2rem;
+      background: #000;
+      border: 1px solid var(--line);
+    }
+    .player-wrap[hidden] { display: none; }
+    .player-wrap video {
+      display: block;
+      width: 100%;
+      max-height: 70vh;
+      background: #000;
+    }
+    .player-label {
+      padding: 0.65rem 1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--line);
+    }
+    .player-error {
+      padding: 1rem;
+      color: #e07070;
+      font-size: 0.85rem;
     }
     .actions {
       display: flex;
@@ -68,6 +90,7 @@
       font-family: inherit;
     }
     .btn:hover { background: var(--accent); }
+    .btn:disabled { opacity: 0.5; cursor: wait; }
     .file-list { list-style: none; border-top: 1px solid var(--line); }
     .file-list li {
       display: flex;
@@ -78,21 +101,40 @@
       border-bottom: 1px solid var(--line);
       flex-wrap: wrap;
     }
+    .file-list li.is-playing {
+      border-left: 2px solid var(--accent);
+      padding-left: 0.75rem;
+    }
     .file-name { font-size: 0.9rem; word-break: break-word; }
     .file-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
     .file-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
     .btn-sm { padding: 0.45rem 0.85rem; font-size: 0.65rem; }
     .loading, .error { color: var(--text-muted); padding: 2rem 0; }
     .error { color: #e07070; }
+    .note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      max-width: 52rem;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
   <a class="back" href="index.html">← Портфолио</a>
   <h1 id="folder-title">…</h1>
   <p class="sub" id="folder-path"></p>
+  <p class="note">Видео воспроизводится со стриминга Yandex Disk — первый запуск может занять несколько секунд. Большие файлы (100+ МБ) лучше скачивать.</p>
+
+  <div class="player-wrap" id="player-wrap" hidden>
+    <video id="player" controls playsinline preload="metadata"></video>
+    <p class="player-label" id="player-label"></p>
+    <p class="player-error" id="player-error" hidden></p>
+  </div>
+
   <div class="actions">
     <button type="button" class="btn" id="btn-zip" hidden>Скачать папку</button>
-    <a class="btn" id="btn-yandex" href="https://disk.yandex.ru/d/Em9lTJpf1cYpPQ" target="_blank" rel="noopener">Весь диск ↗</a>
+    <a class="btn" href="https://disk.yandex.ru/d/Em9lTJpf1cYpPQ" target="_blank" rel="noopener">Весь диск ↗</a>
   </div>
   <ul class="file-list" id="file-list"></ul>
   <p class="loading" id="status">Загрузка файлов…</p>
@@ -102,12 +144,20 @@
     const API = 'https://cloud-api.yandex.net/v1/disk/public/resources';
     const params = new URLSearchParams(location.search);
     const folderPath = params.get('path') || '/';
+    const autoPlayName = params.get('play');
 
     const titleEl = document.getElementById('folder-title');
     const pathEl = document.getElementById('folder-path');
     const listEl = document.getElementById('file-list');
     const statusEl = document.getElementById('status');
     const zipBtn = document.getElementById('btn-zip');
+    const playerWrap = document.getElementById('player-wrap');
+    const player = document.getElementById('player');
+    const playerLabel = document.getElementById('player-label');
+    const playerError = document.getElementById('player-error');
+
+    let items = [];
+    let activeName = null;
 
     pathEl.textContent = folderPath.replace(/^\//, '');
 
@@ -117,6 +167,10 @@
       return mb >= 1024 ? (mb / 1024).toFixed(1) + ' ГБ' : mb.toFixed(1) + ' МБ';
     }
 
+    function isVideo(name) {
+      return /\.(mp4|mov|webm|m4v)$/i.test(name);
+    }
+
     async function apiGet(url) {
       const res = await fetch(url);
       if (!res.ok) throw new Error('API ' + res.status);
@@ -124,12 +178,93 @@
     }
 
     async function downloadUrl(path) {
-      const q = new URLSearchParams({
-        public_key: PUBLIC_KEY,
-        path
-      });
+      const q = new URLSearchParams({ public_key: PUBLIC_KEY, path });
       const data = await apiGet(`${API}/download?${q}`);
       return data.href;
+    }
+
+    async function streamUrl(item) {
+      if (item.file) return item.file;
+      const q = new URLSearchParams({
+        public_key: PUBLIC_KEY,
+        path: item.path,
+        fields: 'file'
+      });
+      const data = await apiGet(`${API}?${q}`);
+      return data.file;
+    }
+
+    function markActive(name) {
+      activeName = name;
+      listEl.querySelectorAll('li').forEach((li) => {
+        li.classList.toggle('is-playing', li.dataset.name === name);
+      });
+    }
+
+    async function playItem(item) {
+      if (!isVideo(item.name)) return;
+      playerWrap.hidden = false;
+      playerError.hidden = true;
+      playerLabel.textContent = 'Загрузка: ' + item.name;
+      markActive(item.name);
+      player.removeAttribute('src');
+      player.load();
+
+      try {
+        const url = await streamUrl(item);
+        player.src = url;
+        playerLabel.textContent = item.name + ' · ' + formatSize(item.size);
+        await player.play();
+      } catch (err) {
+        playerError.hidden = false;
+        playerError.textContent = 'Не удалось воспроизвести. Попробуйте «Скачать» или откройте позже.';
+        console.warn(err);
+      }
+    }
+
+    function renderFileItem(item) {
+      const li = document.createElement('li');
+      li.dataset.name = item.name;
+      const info = document.createElement('div');
+      info.innerHTML = `<div class="file-name">${item.name}</div><div class="file-meta">${item.type === 'dir' ? 'Папка' : formatSize(item.size)}</div>`;
+      const actions = document.createElement('div');
+      actions.className = 'file-actions';
+
+      if (item.type === 'file' && isVideo(item.name)) {
+        const watch = document.createElement('button');
+        watch.type = 'button';
+        watch.className = 'btn btn-sm';
+        watch.textContent = 'Смотреть';
+        watch.addEventListener('click', () => playItem(item));
+        actions.appendChild(watch);
+      }
+
+      if (item.type === 'file') {
+        const dl = document.createElement('button');
+        dl.type = 'button';
+        dl.className = 'btn btn-sm';
+        dl.textContent = 'Скачать';
+        dl.addEventListener('click', async () => {
+          dl.disabled = true;
+          dl.textContent = '…';
+          try {
+            location.href = await downloadUrl(item.path);
+          } catch {
+            dl.textContent = 'Ошибка';
+          }
+        });
+        actions.appendChild(dl);
+      } else {
+        const sub = document.createElement('a');
+        sub.className = 'btn btn-sm';
+        sub.textContent = 'В папку';
+        sub.href = `folder.html?path=${encodeURIComponent(item.path)}`;
+        actions.appendChild(sub);
+      }
+
+      li.appendChild(info);
+      li.appendChild(actions);
+      listEl.appendChild(li);
     }
 
     async function loadFolder() {
@@ -137,64 +272,37 @@
         const q = new URLSearchParams({
           public_key: PUBLIC_KEY,
           path: folderPath,
-          limit: '100'
+          limit: '100',
+          fields: '_embedded.items.name,_embedded.items.path,_embedded.items.type,_embedded.items.size,_embedded.items.file'
         });
         const data = await apiGet(`${API}?${q}`);
         titleEl.textContent = data.name || 'Папка';
         statusEl.hidden = true;
 
-        if (data.type === 'dir') {
-          zipBtn.hidden = false;
-          zipBtn.addEventListener('click', async () => {
-            zipBtn.disabled = true;
-            zipBtn.textContent = 'Подготовка…';
-            try {
-              location.href = await downloadUrl(folderPath);
-            } catch {
-              zipBtn.textContent = 'Ошибка';
-            }
-          });
+        if (data.type !== 'dir') return;
 
-          const items = data._embedded?.items || [];
-          if (!items.length) {
-            listEl.innerHTML = '<li class="file-name">Папка пуста</li>';
-            return;
+        zipBtn.hidden = false;
+        zipBtn.addEventListener('click', async () => {
+          zipBtn.disabled = true;
+          zipBtn.textContent = 'Подготовка…';
+          try {
+            location.href = await downloadUrl(folderPath);
+          } catch {
+            zipBtn.textContent = 'Ошибка';
           }
+        });
 
-          for (const item of items) {
-            const li = document.createElement('li');
-            const info = document.createElement('div');
-            info.innerHTML = `<div class="file-name">${item.name}</div><div class="file-meta">${item.type === 'dir' ? 'Папка' : formatSize(item.size)}</div>`;
-            const actions = document.createElement('div');
-            actions.className = 'file-actions';
+        items = data._embedded?.items || [];
+        if (!items.length) {
+          listEl.innerHTML = '<li class="file-name">Папка пуста</li>';
+          return;
+        }
 
-            if (item.type === 'file') {
-              const open = document.createElement('a');
-              open.className = 'btn btn-sm';
-              open.textContent = 'Открыть';
-              open.href = '#';
-              open.addEventListener('click', async (e) => {
-                e.preventDefault();
-                open.textContent = '…';
-                try {
-                  window.open(await downloadUrl(item.path), '_blank', 'noopener');
-                } finally {
-                  open.textContent = 'Открыть';
-                }
-              });
-              actions.appendChild(open);
-            } else {
-              const sub = document.createElement('a');
-              sub.className = 'btn btn-sm';
-              sub.textContent = 'В папку';
-              sub.href = `folder.html?path=${encodeURIComponent(item.path)}`;
-              actions.appendChild(sub);
-            }
+        items.forEach(renderFileItem);
 
-            li.appendChild(info);
-            li.appendChild(actions);
-            listEl.appendChild(li);
-          }
+        if (autoPlayName) {
+          const featured = items.find((i) => i.name === autoPlayName);
+          if (featured) playItem(featured);
         }
       } catch (err) {
         statusEl.className = 'error';

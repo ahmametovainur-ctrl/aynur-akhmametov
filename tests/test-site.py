@@ -111,7 +111,7 @@ folders = [
     "Ролик на ютуб про города России",
 ]
 for folder in folders:
-    if f"yandexFolderUrl('{folder}')" in js or f'yandexFolderUrl("{folder}")' in js:
+    if f"'{folder}'" in js and "yandexFolderUrl(" in js:
         ok(f"folder link: {folder}")
     else:
         fail(f"Missing yandexFolderUrl for: {folder}")
@@ -125,6 +125,11 @@ if "folder.html?path=" in js:
     ok("case hrefs use folder viewer")
 else:
     fail("case hrefs should use folder.html viewer")
+
+if "&play=" in js or "featured:" in js:
+    ok("featured video autoplay in case links")
+else:
+    fail("case links should include featured video")
 
 if 'id="modal-folder"' in html:
     ok("modal-folder element")
