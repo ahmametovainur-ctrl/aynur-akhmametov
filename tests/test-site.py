@@ -121,6 +121,11 @@ if 'id="modal-folder"' in html:
 else:
     fail("Missing #modal-folder in modal")
 
+if html.count('data-copy="@tandyy9"') >= 2:
+    ok("telegram copy buttons")
+else:
+    fail("Expected 2+ telegram copy buttons")
+
 print("\n=== Scroll snap ===")
 if re.search(r"scroll-snap", html):
     fail("scroll-snap still present in HTML (causes footer bounce)")

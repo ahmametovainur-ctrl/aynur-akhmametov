@@ -52,13 +52,14 @@ const i18n = {
     'case4.desc': 'AI-ролики на пайплайне ComfyUI, Kling, ElevenLabs и n8n.',
     'case5.desc': 'Полный цикл локализации YouTube-ролика на английский, испанский и французский.',
     'case6.desc': '155+ коммерческих продуктов на Envato, 1070+ продаж. TikTok Elements, вертикальные форматы.',
-    'about.bio': 'Senior motion designer с 8-летним опытом. Team Lead в корпоративном продакшне, фриланс, AI-native workflow. Казань, удалённо.',
-    'about.q1': 'Внимание к деталям', 'about.q2': 'Быстрый продакшн', 'about.q3': 'AI-native workflow', 'about.q4': 'Клиентоориентированность',
+    'about.bio': 'Моушн-дизайнер с 8 годами коммерческого опыта: реклама, брендинг, корпоративное видео и AI-продакшн. Руководил видеоотделом в Алабуге — увеличил выпуск с 15 до 24 роликов в месяц. На Envato — 155+ продуктов и 1070+ продаж. Работаю из Казани, открыт к удалённым проектам.',
+    'about.q1': 'Проект под ключ — от брифа до финала', 'about.q2': 'Reels, Shorts, YouTube, презентации', 'about.q3': 'AI + классический моушн в одном пайплайне', 'about.q4': '16:9, 9:16, 1:1, 4:5 и локализация',
     'about.testimonial': '«Профессиональный подход, быстрые сроки и сильный визуал»',
     'footer.contact': 'КОНТАКТЫ', 'footer.connect': 'СВЯЗЬ', 'footer.location': 'Казань, Россия',
     'footer.qr2': 'Showreel', 'footer.scan': 'Сканируй',
     'footer.showreelBackup': 'Showreel (Yandex Disk) ↗',
     'footer.tagline': 'СОЗДАЮ ДВИЖЕНИЕ.<br>РАССКАЗЫВАЮ ИСТОРИИ.',
+    'tg.copied': 'Скопировано!',
     'modal.close': 'Закрыть',
     'modal.open': 'Открыть папку',
     'modal.openEnvato': 'Открыть на Envato',
@@ -105,13 +106,14 @@ const i18n = {
     'case4.desc': 'AI videos on ComfyUI, Kling, ElevenLabs and n8n pipeline.',
     'case5.desc': 'Full-cycle YouTube localization into English, Spanish and French.',
     'case6.desc': '155+ commercial products on Envato, 1070+ sales. TikTok Elements, vertical formats.',
-    'about.bio': 'Senior motion designer with 8 years of experience. Team Lead in corporate production, freelance, AI-native workflow. Kazan, remote.',
-    'about.q1': 'Detail oriented', 'about.q2': 'Fast production', 'about.q3': 'AI-native workflow', 'about.q4': 'Client-focused',
+    'about.bio': 'Motion designer with 8 years of commercial experience in advertising, branding, corporate video and AI production. Led the video team at Alabuga — scaled output from 15 to 24 videos per month. 155+ products and 1070+ sales on Envato. Based in Kazan, open to remote projects.',
+    'about.q1': 'End-to-end — from brief to final render', 'about.q2': 'Reels, Shorts, YouTube, presentations', 'about.q3': 'AI + classic motion in one pipeline', 'about.q4': '16:9, 9:16, 1:1, 4:5 and localization',
     'about.testimonial': '"Professional approach, fast delivery, strong visuals"',
     'footer.contact': 'CONTACT', 'footer.connect': 'CONNECT', 'footer.location': 'Kazan, Russia',
     'footer.qr2': 'Showreel', 'footer.scan': 'Scan',
     'footer.showreelBackup': 'Showreel (Yandex Disk) ↗',
     'footer.tagline': 'CRAFTING MOTION.<br>BUILDING STORIES.',
+    'tg.copied': 'Copied!',
     'modal.close': 'Close',
     'modal.open': 'Open folder',
     'modal.openEnvato': 'Open on Envato',
@@ -261,6 +263,46 @@ function closeCaseModal() {
   document.body.style.overflow = '';
 }
 
+function initCopyButtons() {
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const text = btn.dataset.copy;
+      const handle = btn.querySelector('.tg-handle');
+      const original = handle ? handle.textContent : text;
+
+      async function showCopied() {
+        if (handle) handle.textContent = t('tg.copied');
+        btn.classList.add('copied');
+        setTimeout(() => {
+          if (handle) handle.textContent = original;
+          btn.classList.remove('copied');
+        }, 1800);
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        showCopied();
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showCopied();
+        } catch (err) {
+          console.warn('Copy failed', err);
+        }
+        document.body.removeChild(ta);
+      }
+    });
+  });
+}
+
 function initCaseCards() {
   document.querySelectorAll('[data-case]').forEach((card) => {
     card.addEventListener('click', () => openCaseModal(card.dataset.case));
@@ -286,4 +328,5 @@ document.getElementById('lang-en').addEventListener('click', () => setLang('en')
 
 setLang(lang);
 initShowreelAutoplay();
+initCopyButtons();
 initCaseCards();

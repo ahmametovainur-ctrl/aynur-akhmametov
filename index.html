@@ -759,6 +759,48 @@
 
     .footer-grid a:hover { color: var(--text); }
 
+    .tg-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+
+    .tg-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.65rem;
+      background: rgba(139, 30, 45, 0.12);
+      border: 1px solid rgba(139, 30, 45, 0.35);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .tg-copy:hover {
+      background: rgba(139, 30, 45, 0.22);
+      border-color: var(--accent);
+    }
+
+    .tg-copy.copied {
+      border-color: #3d8b5a;
+      background: rgba(61, 139, 90, 0.15);
+    }
+
+    .tg-copy-icon {
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+
+    .qr-box .tg-copy {
+      margin-top: 0.35rem;
+      font-size: 0.75rem;
+    }
+
     .qr-row {
       display: flex;
       gap: 1.5rem;
@@ -1222,12 +1264,12 @@
       <div>
         <h2 class="section-title" data-i18n="section.about">ОБО МНЕ</h2>
         <div class="avatar">AA</div>
-        <p data-i18n="about.bio">Senior motion designer с 8-летним опытом. Team Lead в корпоративном продакшне, фриланс, AI-native workflow. Казань, удалённо.</p>
+        <p data-i18n="about.bio">Моушн-дизайнер с 8 годами коммерческого опыта: реклама, брендинг, корпоративное видео и AI-продакшн. Руководил видеоотделом в Алабуге — увеличил выпуск с 15 до 24 роликов в месяц. На Envato — 155+ продуктов и 1070+ продаж. Работаю из Казани, открыт к удалённым проектам.</p>
         <ul class="qualities">
-          <li data-i18n="about.q1">Внимание к деталям</li>
-          <li data-i18n="about.q2">Быстрый продакшн</li>
-          <li data-i18n="about.q3">AI-native workflow</li>
-          <li data-i18n="about.q4">Клиентоориентированность</li>
+          <li data-i18n="about.q1">Проект под ключ — от брифа до финала</li>
+          <li data-i18n="about.q2">Reels, Shorts, YouTube, презентации</li>
+          <li data-i18n="about.q3">AI + классический моушн в одном пайплайне</li>
+          <li data-i18n="about.q4">16:9, 9:16, 1:1, 4:5 и локализация</li>
         </ul>
       </div>
       <div>
@@ -1292,7 +1334,13 @@
         <a href="#showreel">Showreel ↗</a>
         <a href="https://disk.yandex.ru/d/Em9lTJpf1cYpPQ" target="_blank" rel="noopener" data-i18n="footer.showreelBackup">Showreel (Yandex Disk) ↗</a>
         <a href="https://elements.envato.com/user/JustaMotion" target="_blank" rel="noopener">Envato / JustaMotion ↗</a>
-        <a href="https://t.me/tandyy9" target="_blank" rel="noopener">Telegram @tandyy9 ↗</a>
+        <div class="tg-row">
+          <a href="https://t.me/tandyy9" target="_blank" rel="noopener">Telegram ↗</a>
+          <button type="button" class="tg-copy" data-copy="@tandyy9" aria-label="Скопировать Telegram">
+            <span class="tg-handle">@tandyy9</span>
+            <span class="tg-copy-icon" aria-hidden="true">⎘</span>
+          </button>
+        </div>
       </div>
       <div>
         <h4 data-i18n="footer.connect">СВЯЗЬ</h4>
@@ -1300,8 +1348,11 @@
           <div class="qr-box">
             <a href="https://t.me/tandyy9" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
               <div class="qr-placeholder"><img src="icons/qr-telegram.png" alt="Telegram QR" width="100" height="100" /></div>
-              <span>@tandyy9</span>
             </a>
+            <button type="button" class="tg-copy" data-copy="@tandyy9" aria-label="Скопировать Telegram">
+              <span class="tg-handle">@tandyy9</span>
+              <span class="tg-copy-icon" aria-hidden="true">⎘</span>
+            </button>
           </div>
           <div class="qr-box">
             <a href="#showreel" style="text-decoration:none;color:inherit">
