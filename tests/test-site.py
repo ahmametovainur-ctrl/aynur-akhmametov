@@ -116,6 +116,16 @@ for folder in folders:
     else:
         fail(f"Missing yandexFolderUrl for: {folder}")
 
+if (ROOT / "folder.html").is_file():
+    ok("folder.html viewer page")
+else:
+    fail("Missing folder.html")
+
+if "folder.html?path=" in js:
+    ok("case hrefs use folder viewer")
+else:
+    fail("case hrefs should use folder.html viewer")
+
 if 'id="modal-folder"' in html:
     ok("modal-folder element")
 else:
@@ -133,7 +143,7 @@ else:
     ok("scroll-snap fully disabled")
 
 print("\n=== Live site checks ===")
-for path in ["", "/js/main.js", "/icons/figma.svg", "/icons/qr-telegram.png", "/videos/showreel.mp4", "/icons/favicon.svg"]:
+for path in ["", "/js/main.js", "/icons/figma.svg", "/icons/qr-telegram.png", "/videos/showreel.mp4", "/icons/favicon.svg", "/folder.html"]:
     url = BASE_URL + path
     status = http_status(url)
     if status == 200:

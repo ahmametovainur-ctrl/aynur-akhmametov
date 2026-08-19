@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml" />
+  <title>Кейс — Aynur Akhmametov</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --accent: #8B1E2D;
+      --text: #E8E0D4;
+      --text-muted: #9a9a9a;
+      --card: #141414;
+      --line: rgba(139, 30, 45, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 4vw 4rem;
+    }
+    .back {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .back:hover { color: var(--text); }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .sub {
+      color: var(--accent);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.25rem;
+      border: 1px solid var(--accent);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn:hover { background: var(--accent); }
+    .file-list { list-style: none; border-top: 1px solid var(--line); }
+    .file-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+    .file-name { font-size: 0.9rem; word-break: break-word; }
+    .file-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .file-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .btn-sm { padding: 0.45rem 0.85rem; font-size: 0.65rem; }
+    .loading, .error { color: var(--text-muted); padding: 2rem 0; }
+    .error { color: #e07070; }
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← Портфолио</a>
+  <h1 id="folder-title">…</h1>
+  <p class="sub" id="folder-path"></p>
+  <div class="actions">
+    <button type="button" class="btn" id="btn-zip" hidden>Скачать папку</button>
+    <a class="btn" id="btn-yandex" href="https://disk.yandex.ru/d/Em9lTJpf1cYpPQ" target="_blank" rel="noopener">Весь диск ↗</a>
+  </div>
+  <ul class="file-list" id="file-list"></ul>
+  <p class="loading" id="status">Загрузка файлов…</p>
+
+  <script>
+    const PUBLIC_KEY = 'https://disk.yandex.ru/d/Em9lTJpf1cYpPQ';
+    const API = 'https://cloud-api.yandex.net/v1/disk/public/resources';
+    const params = new URLSearchParams(location.search);
+    const folderPath = params.get('path') || '/';
+
+    const titleEl = document.getElementById('folder-title');
+    const pathEl = document.getElementById('folder-path');
+    const listEl = document.getElementById('file-list');
+    const statusEl = document.getElementById('status');
+    const zipBtn = document.getElementById('btn-zip');
+
+    pathEl.textContent = folderPath.replace(/^\//, '');
+
+    function formatSize(bytes) {
+      if (!bytes) return '';
+      const mb = bytes / (1024 * 1024);
+      return mb >= 1024 ? (mb / 1024).toFixed(1) + ' ГБ' : mb.toFixed(1) + ' МБ';
+    }
+
+    async function apiGet(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('API ' + res.status);
+      return res.json();
+    }
+
+    async function downloadUrl(path) {
+      const q = new URLSearchParams({
+        public_key: PUBLIC_KEY,
+        path
+      });
+      const data = await apiGet(`${API}/download?${q}`);
+      return data.href;
+    }
+
+    async function loadFolder() {
+      try {
+        const q = new URLSearchParams({
+          public_key: PUBLIC_KEY,
+          path: folderPath,
+          limit: '100'
+        });
+        const data = await apiGet(`${API}?${q}`);
+        titleEl.textContent = data.name || 'Папка';
+        statusEl.hidden = true;
+
+        if (data.type === 'dir') {
+          zipBtn.hidden = false;
+          zipBtn.addEventListener('click', async () => {
+            zipBtn.disabled = true;
+            zipBtn.textContent = 'Подготовка…';
+            try {
+              location.href = await downloadUrl(folderPath);
+            } catch {
+              zipBtn.textContent = 'Ошибка';
+            }
+          });
+
+          const items = data._embedded?.items || [];
+          if (!items.length) {
+            listEl.innerHTML = '<li class="file-name">Папка пуста</li>';
+            return;
+          }
+
+          for (const item of items) {
+            const li = document.createElement('li');
+            const info = document.createElement('div');
+            info.innerHTML = `<div class="file-name">${item.name}</div><div class="file-meta">${item.type === 'dir' ? 'Папка' : formatSize(item.size)}</div>`;
+            const actions = document.createElement('div');
+            actions.className = 'file-actions';
+
+            if (item.type === 'file') {
+              const open = document.createElement('a');
+              open.className = 'btn btn-sm';
+              open.textContent = 'Открыть';
+              open.href = '#';
+              open.addEventListener('click', async (e) => {
+                e.preventDefault();
+                open.textContent = '…';
+                try {
+                  window.open(await downloadUrl(item.path), '_blank', 'noopener');
+                } finally {
+                  open.textContent = 'Открыть';
+                }
+              });
+              actions.appendChild(open);
+            } else {
+              const sub = document.createElement('a');
+              sub.className = 'btn btn-sm';
+              sub.textContent = 'В папку';
+              sub.href = `folder.html?path=${encodeURIComponent(item.path)}`;
+              actions.appendChild(sub);
+            }
+
+            li.appendChild(info);
+            li.appendChild(actions);
+            listEl.appendChild(li);
+          }
+        }
+      } catch (err) {
+        statusEl.className = 'error';
+        statusEl.textContent = 'Не удалось загрузить папку. ' + err.message;
+      }
+    }
+
+    loadFolder();
+  </script>
+</body>
+</html>

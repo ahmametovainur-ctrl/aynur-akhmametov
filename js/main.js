@@ -4,10 +4,9 @@ const SITE = {
   telegram: 'https://t.me/tandyy9'
 };
 
-/** Ссылка на конкретную папку в общем Yandex Disk */
+/** Страница просмотра папки (Yandex Disk не открывает ?path= в браузере) */
 function yandexFolderUrl(folderName) {
-  const path = encodeURIComponent(`/${folderName}`);
-  return `${SITE.yandexBase}?dialog=slider&path=${path}`;
+  return `folder.html?path=${encodeURIComponent('/' + folderName)}`;
 }
 
 const i18n = {
@@ -305,11 +304,18 @@ function initCopyButtons() {
 
 function initCaseCards() {
   document.querySelectorAll('[data-case]').forEach((card) => {
-    card.addEventListener('click', () => openCaseModal(card.dataset.case));
+    const item = caseItems.find((c) => c.id === card.dataset.case);
+    if (item?.href) card.dataset.href = item.href;
+
+    card.addEventListener('click', () => {
+      const caseItem = caseItems.find((c) => c.id === card.dataset.case);
+      if (caseItem?.href) window.open(caseItem.href, '_blank', 'noopener');
+    });
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openCaseModal(card.dataset.case);
+        const caseItem = caseItems.find((c) => c.id === card.dataset.case);
+        if (caseItem?.href) window.open(caseItem.href, '_blank', 'noopener');
       }
     });
   });
